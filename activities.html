@@ -4,28 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Activities | Cabinet Odyssey 2026–2027</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { theme: { extend: { colors: { ocean: { 900: '#2a4a5a', 800: '#3d6b7e' }, sunset: { 500: '#e8773a', 400: '#f09050' }, sand: '#f0dcc0' }, fontFamily: { display: ['"Playfair Display"', 'serif'], body: ['Inter', 'sans-serif'], tc: ['"Noto Serif TC"', 'serif'] } } } }
-  </script>
-  <style>
-    html { min-height: 100%; background: #162e3e; }
-    body { min-height: 100vh; font-family: 'Inter', sans-serif; background: linear-gradient(180deg, #2a4a5a 0%, #1e3a4a 50%, #162e3e 100%) no-repeat; color: #f0dcc0; }
-    .glass { background: rgba(91,143,168,0.08); border: 1px solid rgba(91,143,168,0.15); }
-    .glass-warm { background: rgba(232,119,58,0.06); border: 1px solid rgba(232,119,58,0.2); }
-    .accent-line { width: 60px; height: 2px; background: linear-gradient(90deg, #e8773a, transparent); }
-    .reveal { opacity: 0; transform: translateY(30px); }
-  </style>
+  <meta name="description" content="Cabinet Odyssey's proposed school-life activities, from Spirit Week and Students' Day to wellbeing and environmental initiatives.">
+  <link rel="icon" href="assets/logo.png" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=listing-tiles-1">
 </head>
-<body>
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-ocean-900/90 backdrop-blur-lg border-b border-sunset-500/10">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="index.html" class="font-display text-2xl text-sunset-500" style="font-weight:700;">ODYSSEY</a>
-      <a href="index.html" class="text-sm text-sand/60 hover:text-sunset-400 transition-colors">← Back to Home</a>
+<body class="subpage activities-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Nav -->
+  <nav data-site-nav aria-label="Primary navigation">
+    <div>
+      <a href="index.html" class="font-display">ODYSSEY</a>
+      <a href="index.html" class="text-sm">← Back to Home</a>
+      <button class="menu-toggle" id="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu"><span class="menu-toggle__label">Menu</span><span class="menu-toggle__icon" aria-hidden="true"></span></button>
     </div>
   </nav>
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site navigation" aria-hidden="true" inert>
+    <button class="mobile-menu__close" type="button" data-menu-close aria-label="Close navigation menu">×</button>
+    <div class="mobile-menu__inner">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services <span class="tc" lang="zh-Hant">服務</span></a>
+      <a href="activities.html" aria-current="page">Activities <span class="tc" lang="zh-Hant">校內活動</span></a>
+      <a href="campus.html">Campus <span class="tc" lang="zh-Hant">校園改善</span></a>
+      <a href="joint-school.html">Joint-School <span class="tc" lang="zh-Hant">聯校活動</span></a>
+    </div>
+  </div>
 
+  <main id="main-content">
+  <!-- Hero -->
   <section class="pt-32 pb-16 px-6">
     <div class="max-w-4xl mx-auto text-center">
       <p class="font-body text-xs tracking-[0.3em] uppercase text-sunset-500/60 mb-3">School Life</p>
@@ -34,91 +40,51 @@
     </div>
   </section>
 
+  <!-- School-life activities -->
   <section class="py-16 px-6">
-    <div class="max-w-4xl mx-auto space-y-8">
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🥚</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Easter Appreciation Day 復活節感恩日</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">Egg design workshops, Easter-themed scavenger hunts, and casual wear day. Enhances awareness and appreciation for Easter beyond the assembly stories.</p>
-            <p class="font-body text-xs text-sand/30 mt-2">Casual wear fee: $20 · Workshop fee: TBA</p>
+    <div class="max-w-4xl mx-auto">
+      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal service-panel">
+        <div class="service-listing-grid service-listing-grid--three service-listing-grid--detail">
+          <div class="glass rounded-lg p-4 service-listing-card">
+            <p class="text-sand font-medium mb-1">Easter Appreciation Day 復活節感恩日</p>
+            <p class="text-sand/50">Egg design workshops, Easter-themed scavenger hunts, and casual wear day. Enhances awareness and appreciation for Easter beyond the assembly stories.</p>
+            <p class="service-listing-fee">Casual wear fee: $20 · Workshop fee: TBA</p>
           </div>
-        </div>
-      </div>
-
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🧠</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Mental Awareness Week 心理健康周</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">Promoting mental health through workshops, talks, and wellness activities. Creating a supportive environment for all students.</p>
+          <div class="glass rounded-lg p-4 service-listing-card">
+            <p class="text-sand font-medium mb-1">Mental Awareness Week 心理健康周</p>
+            <p class="text-sand/50">Promoting mental health through workshops, talks, and wellness activities. Creating a supportive environment for all students.</p>
           </div>
-        </div>
-      </div>
-
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🎉</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Spirit Week 精神周</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">A week of themed casual wear days, house competitions, and school spirit events. Building community and school pride.</p>
+          <div class="glass rounded-lg p-4 service-listing-card">
+            <p class="text-sand font-medium mb-1">Spirit Week 精神周</p>
+            <p class="text-sand/50">A week of themed casual wear days, house competitions, and school spirit events. Building community and school pride.</p>
           </div>
-        </div>
-      </div>
-
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🌿</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Eco-Friendly Week 環保周</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">Sustainability initiatives, recycling drives, and environmental awareness campaigns. Making our campus greener.</p>
+          <div class="glass rounded-lg p-4 service-listing-card">
+            <p class="text-sand font-medium mb-1">Eco-Friendly Week 環保周</p>
+            <p class="text-sand/50">Sustainability initiatives, recycling drives, and environmental awareness campaigns. Making our campus greener.</p>
           </div>
-        </div>
-      </div>
-
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🧁</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Bake Sale 烘焙義賣</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">Student-baked goods sale, raising funds for SA activities and welfare. Delicious and purposeful.</p>
+          <div class="glass rounded-lg p-4 service-listing-card">
+            <p class="text-sand font-medium mb-1">Bake Sale 烘焙義賣</p>
+            <p class="text-sand/50">Student-baked goods sale, raising funds for SA activities and welfare. Delicious and purposeful.</p>
           </div>
-        </div>
-      </div>
-
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🎪</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Students' Day 學生日</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">Sports & esports competitions, society booths, talent show, and food stalls.</p>
+          <div class="glass rounded-lg p-4 service-listing-card">
+            <p class="text-sand font-medium mb-1">Students' Day 學生日</p>
+            <p class="text-sand/50">Sports & esports competitions, society booths, talent show, and food stalls.</p>
           </div>
-        </div>
-      </div>
-
-      <div class="glass-warm rounded-2xl p-8 reveal">
-        <div class="flex items-start gap-4">
-          <span class="text-3xl">🎓</span>
-          <div>
-            <h2 class="font-display text-xl text-sunset-500 mb-1">Senior Sign Off 畢業生送舊會</h2>
-            <p class="font-body text-sm text-sand/60" style="font-weight:300;">A farewell celebration for graduating seniors — memories, messages, and appreciation. Sending them off with love.</p>
+          <div class="glass rounded-lg p-4 service-listing-card service-listing-card--wide">
+            <p class="text-sand font-medium mb-1">Senior Sign Off 畢業生送舊會</p>
+            <p class="text-sand/50">A farewell celebration for graduating seniors, with memories, messages, and appreciation. Sending them off with love.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
+  </main>
 
   <footer class="py-12 px-6 border-t border-sand/5 text-center">
     <p class="font-display text-lg text-sunset-500/50 mb-1">Cabinet Odyssey</p>
     <p class="font-body text-xs text-sand/20">St. Stephen's College Students' Association · 2026–2027</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script>
-    gsap.registerPlugin(ScrollTrigger);
-    document.querySelectorAll('.reveal').forEach(el => { gsap.set(el, { opacity: 0, y: 30 }); gsap.to(el, { scrollTrigger: { trigger: el, start: 'top 90%' }, opacity: 1, y: 0, duration: 0.25, ease: 'power3.out' }); });
-  </script>
+  <script src="assets/js/odyssey-ui.js?v=motion-1" defer></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
   <meta name="description" content="St. Stephen's College Students' Association. Cabinet No.1 Odyssey 2026-2027. A journey of growth, challenges and discoveries.">
   <meta property="og:title" content="Cabinet Odyssey 2026-2027">
   <meta property="og:image" content="assets/banner.jpg">
-  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="icon" href="assets/logo.png" type="image/jpeg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -176,9 +176,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(180deg, rgba(30,58,74,0.6) 0%, rgba(30,58,74,0) 20%),
-        linear-gradient(180deg, rgba(30,58,74,0) 72%, rgba(30,58,74,0.6) 92%, var(--teal) 100%);
+      background: rgba(22, 46, 62, 0.12);
     }
     .hero-content {
       position: relative;
@@ -302,7 +300,7 @@
       top: 0;
       bottom: 0;
       width: 1px;
-      background: linear-gradient(180deg, transparent, var(--orange) 20%, var(--orange) 80%, transparent);
+      background: var(--orange);
       opacity: 0.3;
     }
     .timeline-item {
@@ -572,39 +570,59 @@
       .reveal { opacity: 1; }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=apple-audit-1">
 </head>
-<body>
+<body class="home-page" id="top">
+
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
   <div id="nav-sentinel" aria-hidden="true"></div>
 
-  <nav id="nav">
+  <nav id="nav" data-site-nav aria-label="Primary navigation">
     <div class="inner">
-      <a href="#" class="brand">ODYSSEY</a>
+      <a href="#top" class="brand" aria-label="Cabinet Odyssey home">ODYSSEY</a>
       <div class="links">
         <a href="#mission">Mission</a>
         <a href="#events">Events</a>
         <a href="#members">Cabinet</a>
         <a href="#docs">Documents</a>
       </div>
+      <button class="menu-toggle" id="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
+        <span class="menu-toggle__label">Menu</span>
+        <span class="menu-toggle__icon" aria-hidden="true"></span>
+      </button>
     </div>
   </nav>
 
-  <main>
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site navigation" aria-hidden="true" inert>
+    <button class="mobile-menu__close" type="button" data-menu-close aria-label="Close navigation menu">×</button>
+    <div class="mobile-menu__inner">
+      <a href="#mission">Mission</a>
+      <a href="#events">Events</a>
+      <a href="#members">Cabinet</a>
+      <a href="#docs">Documents</a>
+    </div>
+  </div>
+
+  <main id="main-content">
   <section class="hero">
     <div class="hero-bg">
-      <img src="assets/banner.jpg" alt="">
+      <picture>
+        <source media="(max-width: 640px)" srcset="assets/banner-mobile.jpg">
+        <img src="assets/banner.jpg" alt="" width="2048" height="682" fetchpriority="high">
+      </picture>
     </div>
     <div class="hero-content">
       <div class="hero-logo">
-        <img src="assets/logo.png" alt="Odyssey">
+        <img src="assets/logo-badge.jpg" alt="Odyssey" width="320" height="317">
       </div>
       <p class="hero-subtitle">St. Stephen's College Students' Association</p>
       <h1 class="hero-title">ODYSSEY</h1>
       <p class="hero-tc">聖士提反書院學生會<br>一號內閣 · 2026-2027</p>
-      <a href="https://docs.google.com/document/d/1kr4Og9IaL9a-IRYl8kwosoKnGv9g10jau74k4Kpf19c/edit?tab=t.0" target="_blank" class="hero-cta">Election Platform</a>
+      <a href="https://docs.google.com/document/d/1kr4Og9IaL9a-IRYl8kwosoKnGv9g10jau74k4Kpf19c/edit?tab=t.0" target="_blank" rel="noopener noreferrer" class="hero-cta">Read the Election Platform</a>
       <div class="countdown">
         <p class="countdown-label">Voting Day · 28 September 2026</p>
-        <div class="countdown-timer" id="countdown">
+        <div class="countdown-timer" id="countdown" role="timer" aria-label="Time remaining until voting day">
           <div class="countdown-unit"><span class="countdown-num" id="days">--</span><p class="countdown-txt">Days</p></div>
           <span class="countdown-sep">:</span>
           <div class="countdown-unit"><span class="countdown-num" id="hours">--</span><p class="countdown-txt">Hours</p></div>
@@ -850,19 +868,19 @@
     <h2 class="section-title reveal">Our <em>Documents</em></h2>
 
     <div class="doc-links">
-      <a href="https://docs.google.com/document/d/1kr4Og9IaL9a-IRYl8kwosoKnGv9g10jau74k4Kpf19c/edit?tab=t.0" target="_blank" class="doc-link reveal">
+      <a href="https://docs.google.com/document/d/1kr4Og9IaL9a-IRYl8kwosoKnGv9g10jau74k4Kpf19c/edit?tab=t.0" target="_blank" rel="noopener noreferrer" class="doc-link reveal">
         <p class="doc-link-title">Election Platform 2026-2027</p>
         <p class="doc-link-sub">競選政綱 · Full policy document</p>
       </a>
-      <a href="https://docs.google.com/spreadsheets/d/1q5GCyoquL36t5ocSmv5iVOwI0HquKoX4Sp9a1e9c-sA/edit?gid=0#gid=0" target="_blank" class="doc-link reveal">
+      <a href="https://docs.google.com/spreadsheets/d/1q5GCyoquL36t5ocSmv5iVOwI0HquKoX4Sp9a1e9c-sA/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="doc-link reveal">
         <p class="doc-link-title">Welfare & Services</p>
         <p class="doc-link-sub">福利 · Selling, lending, tutoring, cake & class tee orders</p>
       </a>
-      <a href="https://docs.google.com/spreadsheets/d/1bLUyQO5piX8WcMVSqdEmxzhVv0X6oNS4NThcbnw66p8/edit?gid=0#gid=0" target="_blank" class="doc-link reveal">
+      <a href="https://docs.google.com/spreadsheets/d/1bLUyQO5piX8WcMVSqdEmxzhVv0X6oNS4NThcbnw66p8/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="doc-link reveal">
         <p class="doc-link-title">Supporting Schools</p>
         <p class="doc-link-sub">支援學校 · Internship programmes & resources</p>
       </a>
-      <a href="https://www.instagram.com/SSC._.Odyssey/" target="_blank" class="doc-link reveal">
+      <a href="https://www.instagram.com/SSC._.Odyssey/" target="_blank" rel="noopener noreferrer" class="doc-link reveal">
         <p class="doc-link-title">Instagram</p>
         <p class="doc-link-sub">@SSC._.Odyssey</p>
       </a>
@@ -883,7 +901,7 @@
         <a href="#docs">Documents</a>
       </div>
       <div class="footer-contact">
-        <a href="https://www.instagram.com/SSC._.Odyssey/" target="_blank">@SSC._.Odyssey</a>
+        <a href="https://www.instagram.com/SSC._.Odyssey/" target="_blank" rel="noopener noreferrer">@SSC._.Odyssey</a>
         <p class="tc">聖士提反書院學生會</p>
         <p>2026-2027</p>
       </div>
@@ -940,6 +958,7 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
+  <script src="assets/js/odyssey-ui.js?v=motion-1" defer></script>
 
 </body>
 </html>

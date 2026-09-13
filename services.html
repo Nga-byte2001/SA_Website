@@ -4,41 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Services | Cabinet Odyssey 2026–2027</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            ocean: { 900: '#2a4a5a', 800: '#3d6b7e', 700: '#4a7c8e', 600: '#5b8fa8' },
-            sunset: { 500: '#e8773a', 400: '#f09050', 600: '#d06830' },
-            sand: '#f0dcc0', sandlight: '#f8efe0',
-          },
-          fontFamily: { display: ['"Playfair Display"', 'serif'], body: ['Inter', 'sans-serif'], tc: ['"Noto Serif TC"', 'serif'] },
-        },
-      },
-    }
-  </script>
-  <style>
-    html { min-height: 100%; background: #162e3e; }
-    body { min-height: 100vh; font-family: 'Inter', sans-serif; background: linear-gradient(180deg, #2a4a5a 0%, #1e3a4a 50%, #162e3e 100%) no-repeat; color: #f0dcc0; }
-    .glass { background: rgba(91,143,168,0.08); border: 1px solid rgba(91,143,168,0.15); }
-    .glass-warm { background: rgba(232,119,58,0.06); border: 1px solid rgba(232,119,58,0.2); }
-    .accent-line { width: 60px; height: 2px; background: linear-gradient(90deg, #e8773a, transparent); }
-    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #2a4a5a; } ::-webkit-scrollbar-thumb { background: #e8773a66; border-radius: 3px; }
-    .reveal { opacity: 0; transform: translateY(30px); }
-  </style>
+  <meta name="description" content="Cabinet Odyssey's proposed student services, including supplies, lending, recycling, Polaroid photos, cakes, and class tees.">
+  <link rel="icon" href="assets/logo.png" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=services-layout-3">
 </head>
-<body>
+<body class="subpage services-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <!-- Nav -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-ocean-900/90 backdrop-blur-lg border-b border-sunset-500/10">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="index.html" class="font-display text-2xl text-sunset-500" style="font-weight:700;">ODYSSEY</a>
-      <a href="index.html" class="text-sm text-sand/60 hover:text-sunset-400 transition-colors">← Back to Home</a>
+  <nav data-site-nav aria-label="Primary navigation">
+    <div>
+      <a href="index.html" class="font-display">ODYSSEY</a>
+      <a href="index.html" class="text-sm">← Back to Home</a>
+      <button class="menu-toggle" id="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu"><span class="menu-toggle__label">Menu</span><span class="menu-toggle__icon" aria-hidden="true"></span></button>
     </div>
   </nav>
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site navigation" aria-hidden="true" inert>
+    <button class="mobile-menu__close" type="button" data-menu-close aria-label="Close navigation menu">×</button>
+    <div class="mobile-menu__inner">
+      <a href="index.html">Home</a>
+      <a href="services.html" aria-current="page">Services <span class="tc" lang="zh-Hant">服務</span></a>
+      <a href="activities.html">Activities <span class="tc" lang="zh-Hant">校內活動</span></a>
+      <a href="campus.html">Campus <span class="tc" lang="zh-Hant">校園改善</span></a>
+      <a href="joint-school.html">Joint-School <span class="tc" lang="zh-Hant">聯校活動</span></a>
+    </div>
+  </div>
 
+  <main id="main-content">
   <!-- Hero -->
   <section class="pt-32 pb-16 px-6">
     <div class="max-w-4xl mx-auto text-center">
@@ -51,52 +43,52 @@
   <!-- Selling -->
   <section class="py-16 px-6">
     <div class="max-w-4xl mx-auto">
-      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal">
-        <h2 class="font-display text-2xl text-sunset-500 mb-6">Selling Services 售賣服務</h2>
+      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal service-panel service-panel--selling">
+        <h2 class="font-display text-2xl text-sunset-500 mb-6">Selling Services <span class="service-heading-tc" lang="zh-Hant">售賣服務</span></h2>
         <p class="font-body text-sm text-sand/60 mb-6" style="font-weight:300;">All items sold at wholesale price with no profit. Available at the SA room during lunch and recesses.</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Pencils</p><p class="font-display text-xs text-sunset-500">$3</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Pens</p><p class="font-display text-xs text-sunset-500">$2</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Erasers</p><p class="font-display text-xs text-sunset-500">$1</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Correction Tape</p><p class="font-display text-xs text-sunset-500">$5</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Rulers</p><p class="font-display text-xs text-sunset-500">$2</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Highlighters</p><p class="font-display text-xs text-sunset-500">$6</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Glue Sticks</p><p class="font-display text-xs text-sunset-500">$5</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Markers</p><p class="font-display text-xs text-sunset-500">$6</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Mini Staplers</p><p class="font-display text-xs text-sunset-500">$8</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Stapler Refill</p><p class="font-display text-xs text-sunset-500">$10/box</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Protractors</p><p class="font-display text-xs text-sunset-500">$2</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Recycled Bags</p><p class="font-display text-xs text-sunset-500">$4</p></div>
+        <div class="service-listing-grid service-listing-grid--three service-listing-grid--compact">
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Pencils</p><p class="font-display text-xs text-sunset-500">$3</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Pens</p><p class="font-display text-xs text-sunset-500">$2</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Erasers</p><p class="font-display text-xs text-sunset-500">$1</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Correction Tape</p><p class="font-display text-xs text-sunset-500">$5</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Rulers</p><p class="font-display text-xs text-sunset-500">$2</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Highlighters</p><p class="font-display text-xs text-sunset-500">$6</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Glue Sticks</p><p class="font-display text-xs text-sunset-500">$5</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Markers</p><p class="font-display text-xs text-sunset-500">$6</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Mini Staplers</p><p class="font-display text-xs text-sunset-500">$8</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Stapler Refill</p><p class="font-display text-xs text-sunset-500">$10/box</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Protractors</p><p class="font-display text-xs text-sunset-500">$2</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Recycled Bags</p><p class="font-display text-xs text-sunset-500">$4</p></div>
         </div>
       </div>
 
       <!-- Lending -->
-      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal">
-        <h2 class="font-display text-2xl text-sunset-500 mb-6">Lending Services 外借服務</h2>
+      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal service-panel service-panel--lending">
+        <h2 class="font-display text-2xl text-sunset-500 mb-6">Lending Services <span class="service-heading-tc" lang="zh-Hant">外借服務</span></h2>
         <p class="font-body text-sm text-sand/60 mb-6" style="font-weight:300;">Max lending period: 3 days. Late fine: $3/day. Damages covered at market price. Available at SA room during lunch and recesses.</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Hymn Books</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Power Banks</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Pencil Sharpeners</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Umbrellas</p></div>
-          <div class="glass rounded-lg p-3 text-center"><p class="font-body text-sm text-sand">Hole Punchers</p></div>
-          <div class="glass rounded-lg p-3 text-center col-span-2 md:col-span-1"><p class="font-body text-sm text-sand">Calculators</p><p class="font-tc text-xs text-sand/30">F2-F6 only, Student ID check</p></div>
+        <div class="service-listing-grid service-listing-grid--three service-listing-grid--compact">
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Hymn Books</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Power Banks</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Pencil Sharpeners</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Umbrellas</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card"><p class="font-body text-sm text-sand">Hole Punchers</p></div>
+          <div class="glass rounded-lg p-3 text-center service-listing-card service-listing-card--noted"><p class="font-body text-sm text-sand">Calculators</p><p class="font-tc text-xs text-sand/30">F2-F6 only, Student ID check</p></div>
         </div>
       </div>
 
       <!-- Recycling -->
-      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal">
-        <h2 class="font-display text-2xl text-sunset-500 mb-4">Recycling Services 回收服務</h2>
-        <div class="space-y-4 font-body text-sm text-sand/60" style="font-weight:300;">
-          <div class="glass rounded-lg p-4">
+      <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal service-panel service-panel--recycling">
+        <h2 class="font-display text-2xl text-sunset-500 mb-4">Recycling Services <span class="service-heading-tc" lang="zh-Hant">回收服務</span></h2>
+        <div class="service-listing-grid service-listing-grid--three service-listing-grid--detail font-body text-sm text-sand/60" style="font-weight:300;">
+          <div class="glass rounded-lg p-4 service-listing-card">
             <p class="text-sand font-medium mb-1">Blue Notebooks & Composition Paper</p>
             <p class="text-sand/50">Donate unused notebooks and paper. Benefits lower-grade students. Wednesdays at SA room.</p>
           </div>
-          <div class="glass rounded-lg p-4">
+          <div class="glass rounded-lg p-4 service-listing-card">
             <p class="text-sand font-medium mb-1">Board Decoration Paper</p>
             <p class="text-sand/50">Recycle materials from board decoration competitions. Collected materials are sent for recycling.</p>
           </div>
-          <div class="glass rounded-lg p-4">
+          <div class="glass rounded-lg p-4 service-listing-card">
             <p class="text-sand font-medium mb-1">Second Hand Items</p>
             <p class="text-sand/50">Uniforms, books, and electronics passed on to those in need.</p>
           </div>
@@ -105,19 +97,19 @@
 
       <!-- Polaroid -->
       <div class="glass-warm rounded-2xl p-8 md:p-10 mb-8 reveal">
-        <h2 class="font-display text-2xl text-sunset-500 mb-4">Polaroid Service 寶麗來影相</h2>
+        <h2 class="font-display text-2xl text-sunset-500 mb-4">Polaroid Service <span class="service-heading-tc" lang="zh-Hant">寶麗來影相</span></h2>
         <p class="font-body text-sm text-sand/60" style="font-weight:300;">Instant Polaroid stalls at Sport's Day, Christmas Ball, and Students' Day. <span class="text-sunset-500 font-medium">$5/picture</span>. No profit markup.</p>
       </div>
 
       <!-- Cake & Class Tee -->
-      <div class="glass-warm rounded-2xl p-8 md:p-10 reveal">
-        <h2 class="font-display text-2xl text-sunset-500 mb-4">Ordering Services 訂購服務</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-          <div class="glass rounded-lg p-5">
+      <div class="glass-warm rounded-2xl p-8 md:p-10 reveal service-panel service-panel--ordering">
+        <h2 class="font-display text-2xl text-sunset-500 mb-4">Ordering Services <span class="service-heading-tc" lang="zh-Hant">訂購服務</span></h2>
+        <div class="service-listing-grid service-listing-grid--two service-listing-grid--detail">
+          <div class="glass rounded-lg p-5 service-listing-card">
             <h3 class="font-display text-lg text-sand mb-2">Cake Ordering 蛋糕訂購</h3>
             <p class="font-body text-sm text-sand/50" style="font-weight:300;">Order cakes for class parties and birthdays through our cabinet. We coordinate with bakeries for on-time delivery. Menu and deadlines TBA.</p>
           </div>
-          <div class="glass rounded-lg p-5">
+          <div class="glass rounded-lg p-5 service-listing-card">
             <h3 class="font-display text-lg text-sand mb-2">Class Tee Ordering 班衫訂購</h3>
             <p class="font-body text-sm text-sand/50" style="font-weight:300;">We handle supplier sourcing, price comparison, size collection, and quality assurance at wholesale pricing.</p>
           </div>
@@ -126,20 +118,13 @@
       </div>
     </div>
   </section>
+  </main>
 
   <footer class="py-12 px-6 border-t border-sand/5 text-center">
     <p class="font-display text-lg text-sunset-500/50 mb-1">Cabinet Odyssey</p>
     <p class="font-body text-xs text-sand/20">St. Stephen's College Students' Association · 2026–2027</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script>
-    gsap.registerPlugin(ScrollTrigger);
-    document.querySelectorAll('.reveal').forEach(el => {
-      gsap.set(el, { opacity: 0, y: 30 });
-      gsap.to(el, { scrollTrigger: { trigger: el, start: 'top 90%' }, opacity: 1, y: 0, duration: 0.25, ease: 'power3.out' });
-    });
-  </script>
+  <script src="assets/js/odyssey-ui.js?v=motion-1" defer></script>
 </body>
 </html>
