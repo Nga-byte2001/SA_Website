@@ -332,9 +332,6 @@
     }
 
     /* Cabinet */
-    .cabinet-list {
-      margin-top: 3rem;
-    }
     .cabinet-row {
       display: flex;
       justify-content: center;
@@ -559,8 +556,8 @@
       .reveal { opacity: 1; }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=route-6">
-  <link rel="stylesheet" href="assets/css/odyssey-elements.css?v=2">
+  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=audit-2">
+  <link rel="stylesheet" href="assets/css/odyssey-elements.css?v=3">
 </head>
 <body class="home-page" id="top">
 
@@ -595,9 +592,18 @@
   </div>
 
   <svg class="page-route" data-page-route aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="route-dot-halo">
+        <stop offset="0" class="route-halo-in"/>
+        <stop offset="1" class="route-halo-out"/>
+      </radialGradient>
+    </defs>
     <path class="route-base"></path>
     <path class="route-lit"></path>
-    <rect class="route-dot" width="8" height="8"></rect>
+    <g class="route-dot">
+      <circle class="route-dot-halo" r="13" fill="url(#route-dot-halo)"/>
+      <rect class="route-dot-core" x="-4" y="-4" width="8" height="8"></rect>
+    </g>
   </svg>
 
   <main id="main-content">
@@ -633,13 +639,11 @@
           </div>
         </div>
       </div>
-      <div class="scroll-cue" aria-hidden="true"><span class="scroll-cue__line"></span></div>
     </div>
   </section>
 
   <section id="mission" class="scrub-mission">
     <div class="mission-stage">
-      <div class="voyage-waves voyage-waves--mission" data-voyage-waves aria-hidden="true"><svg focusable="false"></svg></div>
       <div class="scrub-beat" data-beat="0">
         <div class="beat-frame">
           <h2 class="section-title">The Meaning of <em>Odyssey</em></h2>
@@ -743,6 +747,8 @@
             <h3 class="flow-label">The <em>Executive</em></h3>
             <p class="flow-label-tc tc">主席與副主席</p>
           </header>
+          <!-- Hierarchy: the President always stands alone in the first row;
+               the Vice-Presidents never share his row. -->
           <div class="cabinet-row reveal">
             <div class="cabinet-member">
               <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/jovan.jpg" alt="Jovan"></div>
@@ -750,6 +756,8 @@
               <p class="member-role">President</p>
               <p class="member-tc">主席</p>
             </div>
+          </div>
+          <div class="cabinet-row reveal">
             <div class="cabinet-member">
               <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/jude.jpg" alt="Jude"></div>
               <p class="member-name">Jude</p>
@@ -895,7 +903,6 @@
   </section>
 
   <div class="logo-showcase reveal">
-    <div class="voyage-waves voyage-waves--closing" data-voyage-waves aria-hidden="true"><svg focusable="false"></svg></div>
     <img src="assets/logo.png" alt="Odyssey">
     <h3>Cabinet <em>Odyssey</em></h3>
     <p class="tc">一號候選內閣 Odyssey</p>
@@ -1007,10 +1014,10 @@
     setInterval(updateCountdown, 1000);
   </script>
   <script src="assets/js/odyssey-ui.js?v=motion-1" defer></script>
-  <script src="assets/js/odyssey-motion.js?v=route-6" defer></script>
+  <script src="assets/js/odyssey-motion.js?v=audit-2" defer></script>
   <script src="assets/js/vendor/gsap.min.js" defer></script>
   <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="assets/js/odyssey-gsap.js?v=4" defer></script>
+  <script src="assets/js/odyssey-gsap.js?v=flow-1" defer></script>
   <script src="assets/js/odyssey-elements.js?v=2" defer></script>
 
 </body>

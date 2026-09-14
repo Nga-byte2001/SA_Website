@@ -477,8 +477,9 @@ body.subpage .btn {
 
 /* The spotlight signal: when a section becomes the one being read, a hairline
    rule sweeps open under its title — the same underline motif as the nav.
-   The left edge starts on the page route's spine (container left + 3.5px)
-   so the two meet as a perpendicular junction instead of crossing. */
+   On route viewports the rule springs from the page route's rail (column
+   left − 20px, where the timeline hairline lives too), so the two meet as a
+   perpendicular junction instead of floating apart. */
 .home-page .section-title::after {
   content: "";
   display: block;
@@ -490,6 +491,12 @@ body.subpage .btn {
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 900ms var(--odyssey-ease-in-out) 120ms;
+}
+
+@media (min-width: 900px) {
+  .home-page .section-title::after {
+    margin-left: -20px;
+  }
 }
 
 .home-page .has-entered .section-title::after,
@@ -550,7 +557,10 @@ body.subpage .btn {
 
 .home-page .timeline {
   max-width: 800px;
-  padding-left: 32px;
+  /* Gutter for the timeline's own hairline (left 3px). At ≥900px the page
+     route's rail owns the line from the margin instead, so the gutter
+     collapses and the text joins the rest of the column. */
+  padding-left: 44px;
 }
 
 .home-page .timeline::before {
@@ -671,6 +681,10 @@ body.subpage .btn {
 
 .home-page .footer-inner {
   width: min(100%, var(--odyssey-content));
+  /* max-width: none overrides the legacy theme's 900px cap in index.html so
+     the footer shares the page's single content column (and its clearance
+     from the route rail) instead of floating on its own narrower island. */
+  max-width: none;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 48px;
@@ -717,6 +731,7 @@ body.subpage .btn {
 
 .home-page .footer-bottom {
   width: min(100%, var(--odyssey-content));
+  max-width: none;
   padding-top: 20px;
 }
 
@@ -1875,6 +1890,294 @@ body.subpage footer p {
 }
 
 /* ==========================================================================
+   Cabinet flow stage (html.cabinet-flow, set by odyssey-motion.js): the
+   sixteen members become five full-viewport boards. Each board pins at the
+   viewport top while the next board sweeps over it, its content rotating
+   in from 30deg around the bottom-left corner, scrubbed 1:1 with scroll —
+   the mechanics of the story-scroll/FlowArt component, owned by the motion
+   engine like every other scrub on this page. Pinning itself is CSS
+   (position: sticky, which body overflow-x: clip permits). The base styles
+   below keep the boards stacked statically: no JS, reduced motion, and
+   viewports under the engine's width/height gates.
+   ========================================================================== */
+
+.flow-panel {
+  position: relative;
+}
+
+.flow-panel + .flow-panel {
+  margin-top: clamp(56px, 9vh, 96px);
+}
+
+.flow-head {
+  max-width: 680px;
+  margin-bottom: clamp(28px, 4.5vh, 48px);
+}
+
+.flow-index {
+  margin: 0 0 12px;
+  color: var(--odyssey-orange-soft);
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+}
+
+.flow-label {
+  margin: 0;
+  color: var(--odyssey-cream);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -.015em;
+}
+
+.flow-label em {
+  padding-bottom: .08em;
+  color: var(--odyssey-orange);
+  font-style: italic;
+}
+
+.flow-label-tc {
+  margin: 10px 0 0;
+  color: var(--odyssey-faint);
+  font-size: .95rem;
+}
+
+/* Slightly larger portraits now that each board owns a full screen, and the
+   member block scales with them so a five-up row keeps fitting its board. */
+.flow-panel .member-photo {
+  width: clamp(128px, 10.5vw, 156px);
+  height: clamp(128px, 10.5vw, 156px);
+}
+
+.flow-panel .cabinet-member {
+  width: clamp(128px, 12vw, 176px);
+}
+
+.flow-panel .cabinet-row {
+  margin-bottom: 0;
+}
+
+/* The Executive board stacks two rows (President, then the Vice-Presidents);
+   the base row margin is zeroed inside boards, so the pair needs its own gap. */
+.flow-panel .cabinet-row + .cabinet-row {
+  margin-top: clamp(1.5rem, 3.5vh, 2.75rem);
+}
+
+/* ---------- the pinned stage ---------- */
+
+html.cabinet-flow .home-page #members {
+  /* Full-bleed board sheets; content stays on the page grid via the inner
+     padding below (the same inset #mission uses). */
+  width: 100%;
+}
+
+/* The section title is a direct child of the now full-bleed section, so it
+   needs the page-grid inset itself — otherwise it lands on the viewport
+   edge, off the grid and across the route rail. */
+html.cabinet-flow .home-page #members > .section-title {
+  margin-right: max(24px, calc((100vw - var(--odyssey-content)) / 2));
+  margin-left: max(24px, calc((100vw - var(--odyssey-content)) / 2));
+}
+
+html.cabinet-flow .flow-stack {
+  position: relative;
+}
+
+html.cabinet-flow .flow-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  /* Boards must sit flush: any gap would expose the page background between
+     one board's release and the next board's full cover. */
+  margin-top: 0;
+  overflow: clip;
+  background: var(--flow-bg, var(--odyssey-night));
+  color: var(--flow-ink, var(--odyssey-cream));
+  will-change: transform;
+}
+
+html.cabinet-flow .flow-panel + .flow-panel {
+  margin-top: 0;
+}
+
+html.cabinet-flow .flow-panel-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--odyssey-nav-height) + clamp(20px, 4vh, 48px))
+           max(24px, calc((100vw - var(--odyssey-content)) / 2))
+           clamp(32px, 6vh, 64px);
+  /* The FlowArt hinge: incoming boards swing up around this corner. */
+  transform-origin: 0 100%;
+  will-change: transform;
+}
+
+html.cabinet-flow .cabinet-row {
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* Board sheets, in sweep order; adjacent boards always contrast. Ink, sub,
+   faint, line and accent are the board's whole palette — every text and
+   border colour inside maps to one of them. */
+html.cabinet-flow .flow-panel:nth-child(1) {
+  --flow-bg: var(--odyssey-orange);
+  --flow-ink: var(--odyssey-night);
+  --flow-sub: rgba(22, 46, 62, .92);
+  --flow-faint: rgba(22, 46, 62, .74);
+  --flow-line: rgba(22, 46, 62, .32);
+  --flow-accent: var(--odyssey-night);
+  --flow-lit: rgba(22, 46, 62, .55);
+}
+
+/* Board 01 is the only board with two member rows (the President stands
+   alone, the Vice-Presidents share the second). Its rhythm and portraits
+   step down so both rows still hold a 100svh board at the flow stage's
+   560px height gate — without this the pair overflows and clips. */
+html.cabinet-flow .flow-panel:nth-child(1) .flow-panel-inner {
+  padding-top: calc(var(--odyssey-nav-height) + 14px);
+  padding-bottom: clamp(20px, 3.5vh, 40px);
+}
+html.cabinet-flow .flow-panel:nth-child(1) .flow-head {
+  margin-bottom: clamp(18px, 3vh, 28px);
+}
+html.cabinet-flow .flow-panel:nth-child(1) .flow-index {
+  margin-bottom: 8px;
+}
+html.cabinet-flow .flow-panel:nth-child(1) .flow-label-tc {
+  margin-top: 6px;
+}
+html.cabinet-flow .flow-panel:nth-child(1) .member-photo {
+  width: clamp(112px, 8.8vw, 132px);
+  height: clamp(112px, 8.8vw, 132px);
+}
+html.cabinet-flow .flow-panel:nth-child(1) .cabinet-member {
+  width: clamp(112px, 10vw, 152px);
+}
+html.cabinet-flow .flow-panel:nth-child(1) .cabinet-row + .cabinet-row {
+  margin-top: clamp(.9rem, 2.4vh, 1.6rem);
+}
+
+@media (min-height: 640px) and (max-height: 800px) {
+  html.cabinet-flow .flow-panel:nth-child(1) .flow-panel-inner { padding-block: 86px 20px; }
+  html.cabinet-flow .flow-panel:nth-child(1) .flow-head { margin-bottom: 14px; }
+  html.cabinet-flow .flow-panel:nth-child(1) .flow-label { font-size: 2.4rem; }
+  html.cabinet-flow .flow-panel:nth-child(1) .flow-label-tc { font-size: .8rem; }
+  html.cabinet-flow .flow-panel:nth-child(1) .member-photo { width: 96px; height: 96px; }
+  html.cabinet-flow .flow-panel:nth-child(1) .member-name { font-size: 1.1rem; margin-top: 8px; }
+  html.cabinet-flow .flow-panel:nth-child(1) .member-role { font-size: .75rem; }
+  html.cabinet-flow .flow-panel:nth-child(1) .member-tc { font-size: .68rem; }
+  html.cabinet-flow .flow-panel:nth-child(1) .cabinet-row + .cabinet-row { margin-top: 14px; }
+}
+
+html.cabinet-flow .flow-panel:nth-child(2) {
+  --flow-bg: #122736;
+  --flow-ink: var(--odyssey-cream);
+  --flow-sub: rgba(240, 220, 192, .84);
+  --flow-faint: rgba(240, 220, 192, .68);
+  --flow-line: rgba(240, 220, 192, .28);
+  --flow-accent: var(--odyssey-orange-soft);
+  --flow-lit: rgba(232, 119, 58, .55);
+}
+
+html.cabinet-flow .flow-panel:nth-child(3) {
+  --flow-bg: var(--odyssey-cream);
+  --flow-ink: var(--odyssey-teal-deep);
+  --flow-sub: rgba(30, 58, 74, .9);
+  --flow-faint: rgba(30, 58, 74, .76);
+  --flow-line: rgba(30, 58, 74, .32);
+  --flow-accent: var(--odyssey-teal-deep);
+  --flow-lit: rgba(30, 58, 74, .5);
+}
+
+html.cabinet-flow .flow-panel:nth-child(4) {
+  --flow-bg: var(--odyssey-teal);
+  --flow-ink: var(--odyssey-cream);
+  --flow-sub: rgba(240, 220, 192, .84);
+  --flow-faint: rgba(240, 220, 192, .68);
+  --flow-line: rgba(240, 220, 192, .3);
+  --flow-accent: var(--odyssey-orange-soft);
+  --flow-lit: rgba(232, 119, 58, .55);
+}
+
+html.cabinet-flow .flow-panel:nth-child(5) {
+  --flow-bg: var(--odyssey-night);
+  --flow-ink: var(--odyssey-cream);
+  --flow-sub: rgba(240, 220, 192, .84);
+  --flow-faint: rgba(240, 220, 192, .68);
+  --flow-line: rgba(240, 220, 192, .28);
+  --flow-accent: var(--odyssey-orange-soft);
+  --flow-lit: rgba(232, 119, 58, .55);
+}
+
+html.cabinet-flow .flow-index,
+html.cabinet-flow .flow-label em {
+  color: var(--flow-accent);
+}
+
+html.cabinet-flow .flow-label {
+  color: var(--flow-ink);
+}
+
+html.cabinet-flow .flow-label-tc {
+  color: var(--flow-faint);
+}
+
+html.cabinet-flow .member-name {
+  color: var(--flow-ink);
+}
+
+html.cabinet-flow .member-role {
+  color: var(--flow-sub);
+}
+
+html.cabinet-flow .member-tc {
+  color: var(--flow-faint);
+}
+
+html.cabinet-flow .member-photo {
+  border-color: var(--flow-line);
+  background: transparent;
+}
+
+html.cabinet-flow .member-photo::before {
+  color: var(--flow-faint);
+}
+
+/* The route line dims portrait borders to a fixed cream and lights passed
+   rows with a fixed orange; boards carry their own ink, so mirror those
+   rules at matching specificity with the board's palette. */
+html.cabinet-flow.route-on .home-page .cabinet-row .member-photo {
+  border-color: var(--flow-line);
+}
+
+html.cabinet-flow.route-on .home-page .cabinet-row.is-lit .member-photo {
+  border-color: var(--flow-lit);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Insurance: the engine never adds html.cabinet-flow under reduced motion,
+     but if the class is ever present the static layout must still win. */
+  html.cabinet-flow .flow-panel {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  html.cabinet-flow .flow-panel + .flow-panel {
+    margin-top: clamp(56px, 9vh, 96px);
+  }
+
+  html.cabinet-flow .flow-panel-inner {
+    height: auto;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
    Motion engine layer: scroll cue, spotlight states, the page route line,
    the pinned mission scrub stage, and section colour shifts. Everything
    here is scoped to the home page and driven by assets/js/odyssey-motion.js.
@@ -1898,47 +2201,6 @@ html.motion-observed {
 
 #nav .links a.is-current::after {
   transform: scaleX(1);
-}
-
-/* ---------- hero scroll cue ---------- */
-
-.scroll-cue {
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: .8;
-}
-
-.scroll-cue__line {
-  display: block;
-  width: 1px;
-  height: 46px;
-  background: rgba(240, 220, 192, .18);
-  overflow: hidden;
-  position: relative;
-}
-
-.scroll-cue__line::after {
-  content: "";
-  position: absolute;
-  top: -14px;
-  left: 0;
-  width: 1px;
-  height: 14px;
-  background: var(--odyssey-orange);
-  animation: odyssey-cue-drift 2.3s var(--odyssey-ease-in-out) infinite;
-}
-
-@keyframes odyssey-cue-drift {
-  0% { transform: translateY(0); }
-  70%, 100% { transform: translateY(60px); }
-}
-
-@media (max-width: 640px) {
-  .scroll-cue {
-    display: none;
-  }
 }
 
 /* ---------- countdown digit arrival ---------- */
@@ -1985,7 +2247,6 @@ html.motion-observed {
 /* ---------- first paint: rail waits for the hero arrival ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue__line::after,
   .home-page .countdown-num.is-ticking {
     animation: none;
   }
@@ -2081,10 +2342,6 @@ html.hero-scrub .home-page .countdown {
   /* The engine drives height from 0 to natural as the timer fades in, so the
      collapsed block leaves no dead space in the card at load. */
   overflow: hidden;
-}
-
-html.hero-scrub .scroll-cue {
-  z-index: 3;
 }
 
 @media (max-width: 640px) {
@@ -2298,10 +2555,17 @@ html.mission-scrub .scrub-beat {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: calc(var(--odyssey-nav-height) + 40px) 48px 44px;
   will-change: transform, opacity;
+}
+
+/* The static stack's spacing rule must not shift the absolutely positioned
+   beats inside the pinned stage — it would push the second beat past the
+   fold and spoil the centering below. */
+html.mission-scrub .scrub-beat + .scrub-beat {
+  margin-top: 0;
 }
 
 html.mission-scrub .scrub-beat[data-beat="0"] {
@@ -2313,18 +2577,16 @@ html.mission-scrub .scrub-beat[data-beat="1"] {
 }
 
 html.mission-scrub .beat-frame {
+  /* Safe centering: auto margins centre the sheet in the stage, and when a
+     short viewport cannot hold it they collapse to zero, so the title stays
+     below the nav instead of being clipped off the top. */
+  margin-block: auto;
   padding: clamp(48px, 8vh, 96px) clamp(48px, 5.5vw, 96px);
-}
-
-/* Frame one is narrower than frame two so the dot's journey between the
-   boxes has real distance: it exits the first trace, crosses the gap and
-   climbs the second box's edge while the beats crossfade. */
-html.mission-scrub .scrub-beat[data-beat="0"] .beat-frame {
-  width: min(100%, 860px);
-}
-
-html.mission-scrub .scrub-beat[data-beat="1"] .beat-frame {
-  width: min(100%, 1010px);
+  /* One shared sheet for both beats — identical horizontal edges, so the
+     crossfade reads as the same board swapping copy; "What We Do" simply
+     holds more and runs lower. The route dot still travels: between the
+     beats the frame's bottom edge moves with the taller copy. */
+  width: min(100%, 960px);
 }
 
 /* Copy inside the frame starts dim and lights up in a stagger when its beat
@@ -2396,7 +2658,6 @@ html.mission-scrub .scrub-beat .content-block {
 
 @media (max-height: 899px) {
   html.mission-scrub .scrub-beat {
-    align-items: flex-start;
     padding-top: calc(var(--odyssey-nav-height) + 28px);
   }
 
@@ -2458,9 +2719,41 @@ html.route-on .page-route {
   stroke-width: 1.5;
 }
 
-.route-dot {
+/* The travelling dot: an 8px core with a painted gradient halo, grouped so
+   one transform write per frame moves both. The halo replaces a CSS
+   drop-shadow filter, which re-rasterizes on every frame the dot moves;
+   a gradient circle rasterizes once and is transformed for free. */
+.route-dot-core {
   fill: var(--odyssey-orange);
-  filter: drop-shadow(0 0 7px rgba(232, 119, 58, .8));
+}
+
+.route-halo-in {
+  stop-color: var(--odyssey-orange);
+  stop-opacity: .5;
+}
+
+.route-halo-out {
+  stop-color: var(--odyssey-orange);
+  stop-opacity: 0;
+}
+
+/* The copper board (cabinet flow 01) is the same orange as the route, so
+   while the dot travels inside it the lit trail, dot and halo recolor to
+   the board's own ink navy — the same blue its headings and names use. */
+.page-route.route-on-copper .route-lit {
+  stroke: rgba(22, 46, 62, .95);
+}
+
+.page-route.route-on-copper .route-dot-core {
+  fill: var(--odyssey-night);
+}
+
+.page-route.route-on-copper .route-halo-in {
+  stop-color: var(--odyssey-night);
+}
+
+.page-route.route-on-copper .route-halo-out {
+  stop-color: var(--odyssey-night);
 }
 
 /* The route owns the events spine: the timeline's own hairline stands down

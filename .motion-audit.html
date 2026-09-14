@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Odyssey browser audit</title>
+<style>body{margin:0;background:#ddd;color:#111;font:13px system-ui}header{padding:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}input[type=number]{width:65px}button,select,input{font:inherit}iframe{display:block;border:0;margin:0 auto;background:#162e3e}pre{white-space:pre-wrap;margin:8px;font:12px monospace}#result{max-height:190px;overflow:auto}</style>
+<header>
+<select id="page" aria-label="Page"><option value="index.html">Home</option><option>services.html</option><option>activities.html</option><option>campus.html</option><option>joint-school.html</option></select>
+<label>Width <input id="width" aria-label="Width" type="number" value="1440"></label><label>Height <input id="height" aria-label="Height" type="number" value="900"></label>
+<button id="load">Load viewport</button><label><input id="hold" type="checkbox" checked> Hold scroll</label>
+<label>Scroll <input id="position" aria-label="Scroll position" type="number" value="0"></label><button id="seek">Set scroll</button>
+<button id="sample">Sample 3 seconds</button><button id="sweep">Sweep 2 viewports</button><button id="inspect">Inspect geometry</button>
+</header><iframe id="site" title="Website under test" width="1440" height="900" src="index.html"></iframe><pre id="result">Loading</pre>
+<script>
+const frame=document.getElementById('site'), output=document.getElementById('result');
+const control=id=>document.getElementById(id);
+function hold(){frame.contentWindow.__odysseyNoSettle=control('hold').checked;}
+function inspect(){const w=frame.contentWindow,d=w.document;return {url:w.location.pathname,width:w.innerWidth,height:w.innerHeight,scroll:w.scrollY,documentWidth:d.documentElement.scrollWidth,classes:d.documentElement.className,sections:[...d.querySelectorAll('main>section,.logo-showcase,.flow-panel')].map(e=>{const r=e.getBoundingClientRect();return {name:e.id||e.className,top:Math.round(r.top+w.scrollY),height:Math.round(r.height)}}),clipped:[...d.querySelectorAll('h1,h2,h3,p,a,.flow-panel-inner,.beat-frame')].filter(e=>{const r=e.getBoundingClientRect(),s=w.getComputedStyle(e);return r.width&&s.visibility!=='hidden'&&s.opacity!=='0'&&(e.scrollWidth>e.clientWidth+3||((e.matches('.flow-panel-inner,.beat-frame'))&&e.scrollHeight>e.clientHeight+3))}).map(e=>({class:e.className,text:e.textContent.trim().slice(0,65),width:e.clientWidth,scrollWidth:e.scrollWidth,height:e.clientHeight,scrollHeight:e.scrollHeight})),images:[...d.images].filter(e=>e.complete&&!e.naturalWidth).map(e=>e.getAttribute('src'))};}
+control('load').onclick=()=>{frame.width=control('width').value;frame.height=control('height').value;frame.src=control('page').value+'?audit='+Date.now();};
+frame.onload=()=>{hold();output.textContent=JSON.stringify(inspect());};
+control('hold').onchange=hold;
+control('seek').onclick=()=>{hold();frame.contentWindow.scrollTo({top:Number(control('position').value),behavior:'instant'});setTimeout(()=>output.textContent=JSON.stringify(inspect()),120);};
+control('inspect').onclick=()=>output.textContent=JSON.stringify(inspect());
+function sample(sweep){const w=frame.contentWindow,d=w.document,records=[],tasks=[],startY=w.scrollY;let start,prev,observer;
+ try{observer=new w.PerformanceObserver(list=>tasks.push(...list.getEntries().map(e=>({start:Math.round(e.startTime),duration:Math.round(e.duration)}))));observer.observe({type:'longtask',buffered:false});}catch(e){}
+ const take=time=>{if(!start)start=time;const elapsed=time-start;if(sweep)w.scrollTo({top:startY+Math.min(1,elapsed/2500)*w.innerHeight*2,behavior:'instant'});const hero=d.querySelector('.hero-content');records.push({t:Math.round(elapsed),dt:prev?+(time-prev).toFixed(2):0,y:w.scrollY,hero:hero?Math.round(hero.getBoundingClientRect().height):null,beats:[...d.querySelectorAll('.scrub-beat')].map(e=>w.getComputedStyle(e).opacity),boards:[...d.querySelectorAll('.flow-panel-inner')].map(e=>w.getComputedStyle(e).transform)});prev=time;if(elapsed<3000){w.requestAnimationFrame(take);return;}if(observer)observer.disconnect();const gaps=records.slice(1).map(r=>r.dt).sort((a,b)=>a-b);output.textContent=JSON.stringify({frames:records.length,meanMs:+(gaps.reduce((a,b)=>a+b)/gaps.length).toFixed(2),p95Ms:gaps[Math.floor(gaps.length*.95)],maxMs:Math.max(...gaps),over50ms:gaps.filter(v=>v>50).length,longTasks:tasks,keyframes:records.filter((r,i)=>i%15===0),geometry:inspect()});};w.requestAnimationFrame(take);output.textContent='Sampling';}
+control('sample').onclick=()=>sample(false);control('sweep').onclick=()=>sample(true);
+</script></html>

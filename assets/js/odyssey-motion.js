@@ -1,12 +1,16 @@
 /* Odyssey motion engine.
    Scroll-driven story mechanics in the style of meuze.ai: inertial wheel
-   scrolling with settle-to-section snapping, a scroll-scrubbed hero
+   scrolling, a scroll-scrubbed hero
    transformation, a pinned two-beat mission stage whose frame the dot
    traces, a continuous zig-zag route line that runs the whole page
    (horizontal runs inside sections, drops between them) with graphics that
-   light up as the dot passes, and background colour that shifts between
-   sections. Fine pointers get the wheel engine; touch keeps native
-   scrolling plus every scrub. Reduced motion disables all of it. */
+   light up as the dot passes, a pinned five-board cabinet stage whose
+   sheets sweep over one another (content rotating in around the
+   bottom-left corner, the FlowArt/story-scroll reveal), and background
+   colour that shifts between sections. Fine pointers get the wheel engine;
+   touch keeps native scrolling plus every scrub. Reduced motion disables
+   all of it. The engine never scrolls the page on its own — when input
+   stops, the page stays exactly where the user left it. */
 (function () {
   'use strict';
 
@@ -44,19 +48,16 @@
   var vh = window.innerHeight;
   var vw = window.innerWidth;
   var maxScroll = 1;
-  var stops = [];        // scroll positions that read as a section landing
   var tops = [];         // document-space top of each section
   var current = window.scrollY;   // smoothed position
   var target = window.scrollY;    // where the wheel wants to go
-  var lastWheelAt = 0;
-  var tween = null;      // {from, to, start, duration}
+  var tween = null;      // {from, to, start, duration} — anchor glides only
   var activeIndex = -1;
   var navLinks = [];
   var heroBg = null;
   var heroContent = null;
   var heroStage = null;
   var countdownEl = null;
-  var scrollCueEl = null;
 
   /* Hero scrub geometry (html.hero-scrub), all in stage-local pixels. */
   var scrubOn = false;
@@ -69,10 +70,7 @@
   var cntH0 = 1;         // countdown natural height (it starts collapsed)
   var cntMargin = 0;     // countdown natural top margin
   var lastScrubT = -1;   // last painted scrub progress; -1 forces a repaint
-  var lastTouchY = 0;
-  var lastTouchScrollAt = 0;
-  var touchDir = 1;
-  var hasUserInput = false; // no scrub pull before the user actually scrolls
+  var lastFrameTime = 0;
 
   /* Mission scrub state (html.mission-scrub): a pinned two-beat stage —
      "The Meaning of Odyssey" then "What We Do" — whose frame boxes the
@@ -89,6 +87,18 @@
   var mStageSeen = false;  // IO: the pinned stage is on screen
   var mStageIO = null;
 
+  /* Cabinet flow state (html.cabinet-flow): five full-viewport boards that
+     pin at the viewport top while the next board sweeps over; each incoming
+     board's content rotates 30deg -> 0 around its bottom-left corner,
+     scrubbed by scroll. Pinning is CSS (sticky); only the rotation is
+     painted here. */
+  var cabFlowOn = false;
+  var cabStack = null;
+  var cabPanelEls = [];
+  var cabInnerEls = [];
+  var cabTops = [];      // document-space top of each board
+  var lastCabScroll = -1;
+
   /* Page route state (html.route-on): the zig-zag line + travelling dot. */
   var routeOn = false;
   var colorOn = false;
@@ -96,7 +106,7 @@
   var routeBase = null;
   var routeLit = null;
   var routeDotEl = null;
-  var xSpine = 24;       // vertical runs: aligned with the timeline spine
+  var xSpine = 24;       // vertical runs: the margin rail left of the column
   var xRight = 24;       // right-side runs: content right edge
   var cabRows = [];      // [{el, y}] cabinet rows that light up
   var showMid = 0;       // logo-showcase middle, keys the colour bands
@@ -109,20 +119,32 @@
   var dotX = -100;
   var dotY = -100;
   var routeBuiltD = '';
+  var routeLitD = '';
+  var routeAppear = -1;
+  var routePaintedScroll = -1;
+  var routeDirty = true; // re-measure changed geometry: force the next paint
+  var dotPainted = '';   // last transform string written to the dot
+  var routeOnCopper = false; // dot is inside the copper board (flow panel 01)
 
-  var SETTLE_DELAY = 150;      // ms of wheel silence before a settle snap
   var LERP = 0.1;              // approach factor per frame (meuze uses 0.12)
-  var SNAP_WINDOW = 0.34;      // share of viewport: glide to a nearby stop
-  var PULL_WINDOW = 0.62;      // share of viewport: pulled to the next stop
-  var TAIL_WINDOW = 0.55;      // share of viewport: pulled to page bottom
   var SCRUB_MIN_VIEWPORT = 520; // px: below this the static stacked layout stays
   var SCRUB_MIN_BANNER = 170;   // px: shortest banner worth showing at load
-  var TOUCH_SETTLE_DELAY = 350; // ms of touch scroll silence before completing
   var ROUTE_MIN_VIEWPORT = 900; // px: the route line needs the room
+  var FLOW_MIN_VIEWPORT = 900;  // px: the cabinet flow stage needs the same room
+  var FLOW_MIN_HEIGHT = 560;    // px: below this a 100svh board cannot hold its members
 
   var clamp = function (v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
   // smoothstep, the same easing family meuze scrubs with
   var smooth = function (t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+
+  /* Document-space top from layout boxes. Sticky pinning and scrub
+     transforms displace getBoundingClientRect, so anything measured inside
+     the cabinet flow stage must read layout, never live rects. */
+  function docTop(el) {
+    var y = 0;
+    while (el) { y += el.offsetTop; el = el.offsetParent; }
+    return y;
+  }
 
   /* ---------- geometry ---------- */
 
@@ -168,7 +190,6 @@
         countdownEl.style.opacity = '';
         countdownEl.style.transform = '';
       }
-      if (scrollCueEl) scrollCueEl.style.opacity = '';
       lastScrubT = -1;
     }
   }
@@ -190,8 +211,38 @@
       beat.style.transform = '';
       beat.classList.remove('is-live');
       beat.classList.remove('lines-in');
+      beat.inert = false;
     });
     mLastT = -1;
+  }
+
+  /* Turns the cabinet flow stage on or off. Off means: no html.cabinet-flow
+     class, so the boards stack statically in normal flow — the fallback for
+     reduced motion and viewports where a 100svh board cannot hold its
+     members. */
+  function setupCabinetFlow(forceOff) {
+    if (!cabStack) cabStack = document.querySelector('[data-cabinet-flow]');
+    if (cabStack && !cabPanelEls.length) {
+      cabPanelEls = Array.prototype.slice.call(cabStack.querySelectorAll('.flow-panel'));
+      cabInnerEls = cabPanelEls.map(function (panel) {
+        return panel.querySelector('.flow-panel-inner');
+      });
+    }
+    var on = !forceOff &&
+             !reduceMotion &&
+             !!cabStack &&
+             cabPanelEls.length > 1 &&
+             window.innerWidth >= FLOW_MIN_VIEWPORT &&
+             window.innerHeight >= FLOW_MIN_HEIGHT;
+    if (on === cabFlowOn) return;
+    cabFlowOn = on;
+    docEl.classList.toggle('cabinet-flow', on);
+    if (!on) {
+      cabInnerEls.forEach(function (inner) {
+        if (inner) inner.style.transform = '';
+      });
+      lastCabScroll = -1;
+    }
   }
 
   /* ---------- line-mask reveal (the "Lines" transition) ---------- */
@@ -372,8 +423,38 @@
         return { x: x, y: y, r: x + f.offsetWidth, b: y + f.offsetHeight };
       });
       mLastT = -1;
+      if (mFrames.some(function (frame) { return frame.b > mStageH - 12; })) {
+        setupMissionScrub(true);
+      }
     }
 
+    if (cabFlowOn && cabInnerEls.some(function (inner) {
+      if (!inner) return false;
+      var style = getComputedStyle(inner);
+      var needed = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      Array.prototype.forEach.call(inner.children, function (child) {
+        var childStyle = getComputedStyle(child);
+        needed += child.offsetHeight + (parseFloat(childStyle.marginTop) || 0) + (parseFloat(childStyle.marginBottom) || 0);
+      });
+      return needed > inner.clientHeight + 1;
+    })) {
+      setupCabinetFlow(true);
+    }
+
+    if (cabPanelEls.length > 1) {
+      // Layout tops: sticky displacement never touches offsetTop, so these
+      // stay honest at any scroll position. Read whenever the boards exist —
+      // the route's copper-board recolor uses them, flow stage on or off.
+      cabTops = cabPanelEls.map(function (panel) { return docTop(panel); });
+    }
+
+    if (cabFlowOn && cabPanelEls.length > 1) {
+      lastCabScroll = -1;
+    }
+
+    // Restore the measured hero before the browser applies scroll anchoring.
+    // Leaving its temporary natural layout until the next frame shifts deep links.
+    if (scrubOn) paintHero(window.scrollY);
     var docH = docEl.scrollHeight;
     maxScroll = Math.max(1, docH - vh);
     tops = SECTIONS.map(function (s) {
@@ -381,12 +462,6 @@
       var el = document.querySelector(s.selector);
       return el ? el.offsetTop : 0;
     });
-    stops = tops.slice(0, -1).concat([maxScroll]);
-    if (missionOn) {
-      // The beat crossfade settles at midpoint: an explicit landing so a
-      // flick from beat one rests on beat two instead of mid-swap.
-      stops.splice(sectionIndex('mission') + 1, 0, mStart + mDist * 0.52);
-    }
 
     measureRoute();
   }
@@ -398,7 +473,7 @@
     var eventsEl = document.querySelector('#events');
     if (eventsEl) {
       // X is scroll-invariant: the route SVG is fixed to the viewport, so
-      // the spine takes the container's viewport left edge. Adding scrollY
+      // the rail keys off the container's viewport left edge. Adding scrollY
       // here would fling the whole route off-screen the first time a
       // re-measure fires mid-scroll (resize, fonts, late GSAP settle).
       var er = eventsEl.getBoundingClientRect();
@@ -410,7 +485,9 @@
     cabRows = Array.prototype.map.call(
       document.querySelectorAll('.cabinet-row'),
       function (el) {
-        return { el: el, y: el.getBoundingClientRect().top + window.scrollY + 64 };
+        // Layout space: the boards carry sticky pinning and scrub rotation,
+        // both of which contaminate getBoundingClientRect.
+        return { el: el, y: docTop(el) + 64 };
       });
 
     var show = document.querySelector('.logo-showcase');
@@ -422,14 +499,14 @@
       // The cabinet→logo diagonal lives in the air between the two
       // sections: centred on their border, rising at most a sixth of the
       // viewport on each side but never into the last portrait row or the
-      // badge. Measured on load-state rects, so entrance transforms
-      // (translateY/scale set by the GSAP layer) can only shrink the
-      // rise — the 56px floor keeps the diagonal out of trouble.
+      // badge. The last row is measured in layout space (it lives inside
+      // the pinned boards); the 56px floor keeps the diagonal out of
+      // trouble.
       var rise = vh / 6;
       var lastRow = document.querySelector('.cabinet-row:last-of-type');
       if (lastRow) {
         rise = Math.min(rise, Math.max(56,
-          showTop - (lastRow.getBoundingClientRect().bottom + window.scrollY) - 28));
+          showTop - (docTop(lastRow) + lastRow.offsetHeight) - 28));
       }
       var badge = show.querySelector('img');
       if (badge) {
@@ -468,10 +545,15 @@
     // Teleport the dot to the current position (no cross-page lerp).
     var pt = routePointAt(window.scrollY);
     if (pt && isFinite(pt.x) && isFinite(pt.y)) { dotX = pt.x; dotY = pt.y; }
+    routeDirty = true;
   }
 
   function cLeftSet(left, width) {
-    xSpine = left + 3.5;
+    // The rail lives in the margin, 20px clear of the content column's left
+    // edge (clamped so the dot stays on-screen down at the 900px route
+    // gate): every heading, board number, card border, and footer line then
+    // keeps the same clearance — the line never crosses text.
+    xSpine = Math.max(5, left - 20);
     xRight = left + width - 3.5;
   }
 
@@ -545,11 +627,22 @@
     pushDoc(xSpine, footerTop);
     pushDoc(xSpine, routeEndY);
 
-    // The terminal vertex is reached exactly when the scroll bottoms out:
-    // whatever the viewport, the last approach reads as completing the
-    // journey on the footer rule, not stalling short of it.
-    if (A.length > 1) {
-      A[A.length - 1] = Math.max(A[A.length - 1], A[A.length - 2] + 1, maxScroll);
+    // Vertices whose scroll-in moment lies beyond the page bottom (the short
+    // footer drop) would otherwise share one clamped arrival, collapse the
+    // last segment's span and freeze the dot a vertex short of the rule.
+    // Spread them across the remaining scroll instead: strictly increasing
+    // arrivals, the terminal vertex reached exactly as the scroll bottoms out.
+    var firstLate = -1;
+    for (var ai = 0; ai < A.length; ai++) {
+      if (A[ai] > maxScroll) { firstLate = ai; break; }
+    }
+    if (firstLate > -1) {
+      var from = firstLate > 0 ? A[firstLate - 1] : 0;
+      var tail = Math.max(1, maxScroll - from);
+      var count = A.length - firstLate;
+      for (var bi = firstLate; bi < A.length; bi++) {
+        A[bi] = from + tail * ((bi - firstLate + 1) / count);
+      }
     }
 
     return { V: V, A: A };
@@ -574,25 +667,37 @@
     // The route joins the story as the hero scrub hands over; it is not part
     // of the banner show.
     var appear = scrubOn ? clamp((scrollY - scrubDist * 0.55) / (vh * 0.3), 0, 1) : 1;
-    routeSvg.style.opacity = appear.toFixed(3);
-    if (appear <= 0.01) return;
+
+    // Idle frames cost nothing: the route is a pure function of scrollY
+    // (plus re-measured geometry, which sets routeDirty), so an unchanged
+    // scroll skips every read and write below.
+    if (!routeDirty && scrollY === routePaintedScroll) return;
+    if (appear !== routeAppear) {
+      routeSvg.style.opacity = appear.toFixed(3);
+      routeAppear = appear;
+    }
+    if (appear <= 0.01) {
+      routePaintedScroll = scrollY;
+      routeDirty = false;
+      return;
+    }
 
     var pt = routePointAt(scrollY);
+    if (!isFinite(pt.x) || !isFinite(pt.y)) return;
     var V = pt.V;
 
-    // Smooth the dot along the line; big jumps (resize, anchor glide) snap.
-    if (!isFinite(pt.x) || !isFinite(pt.y)) return;
-    if (dotX < -50 || Math.abs(pt.x - dotX) > vw * 1.5 || Math.abs(pt.y - dotY) > vh * 2) {
-      dotX = pt.x; dotY = pt.y;
-    } else {
-      dotX += (pt.x - dotX) * 0.42;
-      dotY += (pt.y - dotY) * 0.42;
-    }
+    // The dot rides the tip of the lit trail exactly. Scroll itself is the
+    // smoothed quantity (engine chase, anchor glides, native touch scroll),
+    // so easing the dot on top of that only made it sag behind the trail's
+    // end on fast glides.
+    dotX = pt.x;
+    dotY = pt.y;
 
     // One line, one trail: the dim path is the whole circuit, the lit path
     // is exactly the part the dot has travelled. Both rebuild from the same
-    // vertices every frame, so the lit line can never separate from the
+    // vertices every change, so the lit line can never separate from the
     // route or from the dot, and the frame morph carries both together.
+    // Writes are guarded: an unchanged attribute string is never re-set.
     var li = pt.i;
     var d = 'M' + V.map(function (v) { return v[0].toFixed(1) + ' ' + v[1].toFixed(1); }).join('L');
     if (d !== routeBuiltD) {
@@ -603,16 +708,35 @@
     var t2 = [];
     for (var k = 0; k <= li && k < V.length; k++) t2.push(V[k]);
     t2.push([pt.x, pt.y]);
-    routeLit.setAttribute('d', 'M' + t2.map(function (v) { return v[0].toFixed(1) + ' ' + v[1].toFixed(1); }).join('L'));
+    var ld = 'M' + t2.map(function (v) { return v[0].toFixed(1) + ' ' + v[1].toFixed(1); }).join('L');
+    if (ld !== routeLitD) {
+      routeLit.setAttribute('d', ld);
+      routeLitD = ld;
+    }
 
-
-    routeDotEl.setAttribute('transform', 'translate(' + (dotX - 4).toFixed(1) + ' ' + (dotY - 4).toFixed(1) + ')');
+    var dt = 'translate(' + dotX.toFixed(1) + ' ' + dotY.toFixed(1) + ')';
+    if (dt !== dotPainted) {
+      routeDotEl.setAttribute('transform', dt);
+      dotPainted = dt;
+    }
 
     // Graphics light up as the dot passes them.
     var dotDocY = dotY + scrollY;
     cabRows.forEach(function (row) {
       row.el.classList.toggle('is-lit', dotDocY >= row.y);
     });
+
+    // While the dot is inside the copper board its orange would vanish into
+    // the background, so the lit trail and dot recolor to the board's ink
+    // navy for the length of that board.
+    var overCopper = cabTops.length > 1 && dotDocY >= cabTops[0] && dotDocY < cabTops[1];
+    if (overCopper !== routeOnCopper) {
+      routeOnCopper = overCopper;
+      routeSvg.classList.toggle('route-on-copper', overCopper);
+    }
+
+    routePaintedScroll = scrollY;
+    routeDirty = false;
   }
 
   /* ---------- colour shift between sections ---------- */
@@ -714,64 +838,6 @@
     startTween(y, duration);
   }
 
-  /* ---------- settle snapping ---------- */
-
-  /* Inside the hero scrub range: upward travel always carries the
-     transformation back to the top; downward travel completes it forward
-     unless the user barely entered (a stray few pixels snaps back like any
-     other section). */
-  function scrubSettleTarget(y, direction) {
-    if (direction < 0) return 0;
-    return y < scrubDist * 0.25 ? 0 : scrubDist;
-  }
-
-  function settle() {
-    if (window.__odysseyNoSettle) return;
-    var y = target;
-    var direction = settleDirection || 0;
-    var best = null;
-
-    // The hero scrub range pulls only after real input — at a fresh load the
-    // engine must idle on the stacked banner, not morph itself away.
-    if (scrubOn && hasUserInput && y < scrubDist - 2) {
-      best = scrubSettleTarget(y, direction);
-    } else if (missionOn && y > mStart + 2 && y < mStart + mDist - 2) {
-      // Inside the mission stage, travel is stage-wise: every flick lands
-      // on the next (or previous) beat state, never mid-scrub.
-      var m1 = mStart + mDist * 0.52;
-      if (direction < 0) best = y > m1 + 2 ? m1 : mStart;
-      else best = y < m1 - 2 ? m1 : mStart + mDist;
-    } else if (maxScroll - y < vh * TAIL_WINDOW) {
-      // Page bottom always wins when we are close to the end.
-      best = maxScroll;
-    } else {
-      var upper = null;
-      var lower = null;
-      stops.forEach(function (stop) {
-        if (stop < y - 2 && (upper === null || stop > upper)) upper = stop;
-        if (stop > y + 2 && (lower === null || stop < lower)) lower = stop;
-      });
-
-      if (direction >= 0 && lower !== null && lower - y < vh * PULL_WINDOW) {
-        best = lower;
-      } else if (direction <= 0 && upper !== null && y - upper < vh * PULL_WINDOW) {
-        best = upper;
-      } else {
-        // Neutral: glide to whichever stop is within the near window.
-        var nearest = null;
-        [upper, lower].forEach(function (stop) {
-          if (stop === null) return;
-          if (Math.abs(stop - y) < vh * SNAP_WINDOW) nearest = stop;
-        });
-        best = nearest;
-      }
-    }
-
-    if (best !== null && Math.abs(best - y) > 2) glideTo(best);
-  }
-
-  var settleDirection = 1;
-
   /* ---------- wheel ---------- */
 
   function onWheel(event) {
@@ -783,10 +849,7 @@
 
     event.preventDefault();
     if (tween) tween = null;
-    hasUserInput = true;
     target = clamp(target + delta, 0, maxScroll);
-    if (delta !== 0) settleDirection = delta > 0 ? 1 : -1;
-    lastWheelAt = performance.now();
   }
 
   /* ---------- anchors ---------- */
@@ -815,7 +878,6 @@
         if (reduceMotion) {
           window.scrollTo(0, y);
         } else {
-          settleDirection = y >= target ? 1 : -1;
           glideTo(y);
         }
         if (history.pushState) history.pushState(null, '', hash);
@@ -826,8 +888,11 @@
   /* ---------- frame loop ---------- */
 
   function frame(now) {
-    // Tweens run on every device (touch users glide from taps too); the
-    // inertial chase and settle snapping are fine-pointer only.
+    var elapsed = lastFrameTime ? Math.min(64, now - lastFrameTime) : 1000 / 60;
+    lastFrameTime = now;
+    // Tweens (anchor glides) run on every device; the inertial chase is
+    // fine-pointer only. Neither ever moves the page on its own: when input
+    // stops, `current` decays onto the last requested position and stays.
     if (tween) {
       var t = clamp((now - tween.start) / tween.duration, 0, 1);
       var v = tween.from + (tween.to - tween.from) * smooth(t);
@@ -835,9 +900,9 @@
       // instead would leave a mushy ~700ms tail after every landing.
       target = v;
       current = v;
-      if (t >= 1) { target = tween.to; current = tween.to; tween = null; lastWheelAt = now; }
+      if (t >= 1) { target = tween.to; current = tween.to; tween = null; }
     } else if (engineOn) {
-      current += (target - current) * LERP;
+      current += (target - current) * (1 - Math.pow(1 - LERP, elapsed / (1000 / 60)));
       if (Math.abs(target - current) < 0.12) current = target;
     }
 
@@ -845,20 +910,6 @@
       var rounded = Math.round(current * 100) / 100;
       if (window.scrollY !== rounded) {
         window.scrollTo(0, rounded);
-      }
-
-      if (engineOn && !tween && current === target && now - lastWheelAt > SETTLE_DELAY) {
-        settle();
-      }
-    } else if (!reduceMotion && !tween && now - lastTouchScrollAt > TOUCH_SETTLE_DELAY) {
-      // Touch has no wheel engine, so after the finger stops, finish any
-      // hero transformation left hanging mid-way rather than rest
-      // half-morphed.
-      var ty = window.scrollY;
-      if (scrubOn && ty > 2 && ty < scrubDist - 2) {
-        settleDirection = touchDir;
-        glideTo(scrubSettleTarget(ty, touchDir));
-        lastTouchScrollAt = now;
       }
     }
 
@@ -873,6 +924,7 @@
 
     if (scrubOn) paintHero(scrollY);
     if (missionOn) paintMission(scrollY);
+    if (cabFlowOn) paintCabinetFlow(scrollY);
     paintRoute(scrollY);
     paintColors(scrollY);
   }
@@ -908,7 +960,6 @@
       countdownEl.style.height = (cntH0 * r).toFixed(1) + 'px';
       countdownEl.style.marginTop = (cntMargin * r).toFixed(1) + 'px';
     }
-    if (scrollCueEl) scrollCueEl.style.opacity = (0.8 * (1 - smooth(clamp(t * 3, 0, 1)))).toFixed(3);
   }
 
   /* ---------- mission scrub (pinned two-beat stage) ---------- */
@@ -932,16 +983,45 @@
     b1.style.opacity = swapIn.toFixed(3);
     b1.style.transform = 'translate3d(0,' + (26 * (1 - swapIn)).toFixed(1) + 'px,0)';
 
-    var live0 = swapOut < 0.5;
-    var live1 = swapIn >= 0.5;
+    // Let the parent opacity own the entire crossfade. Hiding the line
+    // masks at 50% left a scroll interval with neither scene readable.
+    var live0 = swapOut < 1;
+    var live1 = swapIn > 0;
     b0.classList.toggle('is-live', live0);
     b1.classList.toggle('is-live', live1);
+    b0.inert = swapIn >= 0.5;
+    b1.inert = swapIn < 0.5;
 
     // The line-mask reveal plays when a beat takes over while the stage is
     // actually on screen; it resets whenever either condition drops, so it
     // replays on every re-entry.
     b0.classList.toggle('lines-in', live0 && mStageSeen);
     b1.classList.toggle('lines-in', live1 && mStageSeen);
+  }
+
+  /* ---------- cabinet flow (pinned five-board stage) ---------- */
+
+  function paintCabinetFlow(scrollY) {
+    // Whole-pixel guard: the rotation is scrubbed 1:1, so sub-pixel scroll
+    // noise need not reach the style layer.
+    var key = Math.round(scrollY);
+    if (key === lastCabScroll) return;
+    lastCabScroll = key;
+
+    // Each incoming board swings its content from 30deg around the
+    // bottom-left corner to flat while its top edge travels from the
+    // viewport bottom to 25% height — the FlowArt reveal geometry. The
+    // board itself (sticky) wipes over the pinned previous board in the
+    // same scroll; only the rotation is scrubbed here.
+    for (var i = 1; i < cabPanelEls.length; i++) {
+      var inner = cabInnerEls[i];
+      if (!inner) continue;
+      var start = cabTops[i] - vh;
+      var end = cabTops[i] - vh * 0.25;
+      var p = clamp((scrollY - start) / Math.max(1, end - start), 0, 1);
+      var rot = 30 * (1 - smooth(p));
+      inner.style.transform = rot < 0.02 ? '' : 'rotate(' + rot.toFixed(3) + 'deg)';
+    }
   }
 
   /* ---------- boot ---------- */
@@ -951,10 +1031,10 @@
     heroContent = document.querySelector('.hero-content');
     heroStage = document.querySelector('.hero-stage');
     countdownEl = document.querySelector('.countdown');
-    scrollCueEl = document.querySelector('.scroll-cue');
     mWrap = document.getElementById('mission');
     mStage = document.querySelector('.mission-stage');
     mBeatEls = Array.prototype.slice.call(document.querySelectorAll('.scrub-beat'));
+    cabStack = document.querySelector('[data-cabinet-flow]');
     routeSvg = document.querySelector('[data-page-route]');
     if (routeSvg) {
       routeBase = routeSvg.querySelector('.route-base');
@@ -965,6 +1045,7 @@
 
     setupScrub();
     setupMissionScrub();
+    setupCabinetFlow();
     setupRoute();
     measure();
     bindAnchors();
@@ -974,24 +1055,11 @@
     }
 
     window.addEventListener('scroll', function () {
-      var y = window.scrollY;
-      if (!engineOn) {
-        // Touch: keep the tween's `from` honest while the user scrolls and
-        // remember the travel direction for the scrub-completion settle.
-        if (y > lastTouchY + 1) touchDir = 1;
-        else if (y < lastTouchY - 1) touchDir = -1;
-        lastTouchY = y;
-        lastTouchScrollAt = performance.now();
-        current = target = y;
-        return;
-      }
       // Our own scrollTo lands exactly on `current`; anything that strays is
-      // the scrollbar or the keyboard, so hand control back to the user.
-      // (A time-based guard here misfires on late-delivered scroll events
-      // and aborts settle glides a few pixels early.)
+      // the user (touch, scrollbar, keyboard), so adopt the position and
+      // cancel any in-flight anchor glide. The engine never scrolls itself.
+      var y = window.scrollY;
       if (Math.abs(y - current) > 1.5) {
-        settleDirection = y > current ? 1 : -1;
-        hasUserInput = true;
         current = target = y;
         tween = null;
       }
@@ -1004,6 +1072,7 @@
         var wasOn = missionOn;
         setupScrub();
         setupMissionScrub();
+        setupCabinetFlow();
         if (wasOn && missionOn) {
           // Re-split so line grouping follows the new wrap.
           mBeatEls.forEach(unsplitBeatLines);
@@ -1078,9 +1147,22 @@
     window.requestAnimationFrame(frame);
   }
 
+  /* A boot failure must never be silent: every scrub and the route line
+     live inside this loop, so a thrown error is recorded
+     (and re-thrown for the console) instead of vanishing with the rAF
+     chain. */
+  function startEngine() {
+    try {
+      boot();
+    } catch (err) {
+      window.__odysseyBootErr = (err && err.stack) || String(err);
+      throw err;
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', startEngine);
   } else {
-    boot();
+    startEngine();
   }
 })();

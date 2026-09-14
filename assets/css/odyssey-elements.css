@@ -43,13 +43,6 @@
 .home-page .hero-edition { left: 30px; }
 .home-page .hero-year { right: 30px; }
 
-.mission-stage { position: relative; isolation: isolate; }
-.voyage-waves--mission {
-  z-index: -1;
-  opacity: .13;
-  mask-image: linear-gradient(90deg, #000, transparent 28%, transparent 72%, #000);
-}
-
 [data-spotlight] { position: relative; isolation: isolate; overflow: hidden; }
 .odyssey-spotlight {
   position: absolute;
@@ -92,20 +85,15 @@
 }
 .event-month small {
   display: block;
-  margin-top: 12px;
+  /* Cormorant's old-style figures descend ~26px below the baseline at this
+     size (03/04/05); 12px put the label on top of those tails. */
+  margin-top: 26px;
   font-family: "DM Sans", sans-serif;
   font-size: .62rem;
   letter-spacing: .12em;
   text-transform: uppercase;
 }
 
-.home-page .logo-showcase { position: relative; isolation: isolate; overflow: hidden; }
-.voyage-waves--closing {
-  z-index: -1;
-  color: var(--odyssey-orange-soft);
-  opacity: .35;
-  mask-image: linear-gradient(90deg, #000, #000 20%, transparent 40%, transparent 60%, #000 80%, #000);
-}
 .home-page .logo-showcase > img {
   width: 152px;
   height: 152px;
@@ -132,7 +120,11 @@ body.subpage .text-center h1 .gsap-word {
 }
 
 @media (min-width: 900px) {
-  .home-page .timeline { max-width: none; }
+  /* The page route's rail runs in the margin 20px left of the content
+     column, so timeline text sits on the column edge like every other
+     section and the hairline (route-off state) moves out to the rail. */
+  .home-page .timeline { max-width: none; padding-left: 0; }
+  .home-page .timeline::before { left: -20px; }
   .home-page .timeline-item { padding-right: 180px; }
   .event-month {
     display: block;
@@ -164,9 +156,7 @@ body.subpage .text-center h1 .gsap-word {
   .home-page .hero-content > .hero-edition,
   .home-page .hero-content > .hero-year { display: none; }
   .home-page .hero-content > .voyage-waves--hero { opacity: .2; }
-  .voyage-waves--mission { opacity: .08; }
   .home-page .pillar-link { min-height: 106px; padding: 14px 16px; }
-  .voyage-waves--closing { opacity: .2; }
 }
 
 @media (prefers-reduced-motion: reduce) {

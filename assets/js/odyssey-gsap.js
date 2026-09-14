@@ -253,6 +253,15 @@
         return !!(el.closest && el.closest('.scrub-mission'));
       }
 
+      // Same idea for the cabinet flow stage (odyssey-motion.js): while its
+      // boards are pinned and swept by scroll, their members are lit by the
+      // scrub, not by entrance triggers. When the stage is off (narrow or
+      // short viewports) its members stay in the entrance system.
+      function inFlowStage(el) {
+        return document.documentElement.classList.contains('cabinet-flow') &&
+               !!(el.closest && el.closest('.flow-stack'));
+      }
+
       titleReveal(Array.prototype.filter.call(
         document.querySelectorAll('.section-title'),
         function (t) { return !inScrubStage(t); }
@@ -262,7 +271,10 @@
         function (el) { return !inScrubStage(el); }
       ));
       riseIn(document.querySelectorAll('.timeline .timeline-item'));
-      riseIn(document.querySelectorAll('.cabinet-member'));
+      riseIn(Array.prototype.filter.call(
+        document.querySelectorAll('.cabinet-member'),
+        function (el) { return !inFlowStage(el); }
+      ));
       riseIn(Array.prototype.filter.call(
         document.querySelectorAll('.pillar-link'),
         function (el) { return !inScrubStage(el); }
@@ -307,7 +319,10 @@
       }
 
       // Portraits settle in with a small pop, independent of the row fades.
-      var photos = document.querySelectorAll('.cabinet-member .member-photo');
+      var photos = Array.prototype.filter.call(
+        document.querySelectorAll('.cabinet-member .member-photo'),
+        function (el) { return !inFlowStage(el); }
+      );
       if (photos.length) {
         gsap.set(photos, { scale: 0.9 });
         ScrollTrigger.batch(photos, {
