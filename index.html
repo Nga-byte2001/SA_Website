@@ -307,17 +307,6 @@
       position: relative;
       padding-bottom: 3rem;
     }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -2rem;
-      top: 0.5rem;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--orange);
-      transform: translateX(-50%);
-    }
     .timeline-date {
       font-size: 0.7rem;
       letter-spacing: 0.2em;
@@ -570,7 +559,8 @@
       .reveal { opacity: 1; }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=apple-audit-1">
+  <link rel="stylesheet" href="assets/css/odyssey-ui.css?v=route-6">
+  <link rel="stylesheet" href="assets/css/odyssey-elements.css?v=2">
 </head>
 <body class="home-page" id="top">
 
@@ -604,60 +594,80 @@
     </div>
   </div>
 
+  <svg class="page-route" data-page-route aria-hidden="true" focusable="false">
+    <path class="route-base"></path>
+    <path class="route-lit"></path>
+    <rect class="route-dot" width="8" height="8"></rect>
+  </svg>
+
   <main id="main-content">
   <section class="hero">
-    <div class="hero-bg">
-      <picture>
-        <source media="(max-width: 640px)" srcset="assets/banner-mobile.jpg">
-        <img src="assets/banner.jpg" alt="" width="2048" height="682" fetchpriority="high">
-      </picture>
-    </div>
-    <div class="hero-content">
-      <div class="hero-logo">
-        <img src="assets/logo-badge.jpg" alt="Odyssey" width="320" height="317">
+    <div class="hero-stage">
+      <div class="hero-bg">
+        <picture>
+          <source media="(max-width: 640px)" srcset="assets/banner-mobile.jpg">
+          <img src="assets/banner.jpg" alt="" width="2048" height="682" fetchpriority="high">
+        </picture>
       </div>
-      <p class="hero-subtitle">St. Stephen's College Students' Association</p>
-      <h1 class="hero-title">ODYSSEY</h1>
-      <p class="hero-tc">聖士提反書院學生會<br>一號內閣 · 2026-2027</p>
-      <a href="https://docs.google.com/document/d/1kr4Og9IaL9a-IRYl8kwosoKnGv9g10jau74k4Kpf19c/edit?tab=t.0" target="_blank" rel="noopener noreferrer" class="hero-cta">Read the Election Platform</a>
-      <div class="countdown">
-        <p class="countdown-label">Voting Day · 28 September 2026</p>
-        <div class="countdown-timer" id="countdown" role="timer" aria-label="Time remaining until voting day">
-          <div class="countdown-unit"><span class="countdown-num" id="days">--</span><p class="countdown-txt">Days</p></div>
-          <span class="countdown-sep">:</span>
-          <div class="countdown-unit"><span class="countdown-num" id="hours">--</span><p class="countdown-txt">Hours</p></div>
-          <span class="countdown-sep">:</span>
-          <div class="countdown-unit"><span class="countdown-num" id="mins">--</span><p class="countdown-txt">Mins</p></div>
-          <span class="countdown-sep">:</span>
-          <div class="countdown-unit"><span class="countdown-num" id="secs">--</span><p class="countdown-txt">Secs</p></div>
+      <div class="hero-content">
+        <div class="voyage-waves voyage-waves--hero" data-voyage-waves aria-hidden="true"><svg focusable="false"></svg></div>
+        <span class="hero-edition" aria-hidden="true">Cabinet No. 01</span>
+        <span class="hero-year" aria-hidden="true">2026 / 2027</span>
+        <div class="hero-logo">
+          <img src="assets/logo-badge.jpg" alt="Odyssey" width="320" height="317">
+        </div>
+        <p class="hero-subtitle">St. Stephen's College Students' Association</p>
+        <h1 class="hero-title">ODYSSEY</h1>
+        <p class="hero-tc">聖士提反書院學生會<br>一號內閣 · 2026-2027</p>
+        <a href="https://docs.google.com/document/d/1kr4Og9IaL9a-IRYl8kwosoKnGv9g10jau74k4Kpf19c/edit?tab=t.0" target="_blank" rel="noopener noreferrer" class="hero-cta">Read the Election Platform</a>
+        <div class="countdown">
+          <p class="countdown-label">Voting Day · 28 September 2026</p>
+          <div class="countdown-timer" id="countdown" role="timer" aria-label="Time remaining until voting day">
+            <div class="countdown-unit"><span class="countdown-num" id="days">--</span><p class="countdown-txt">Days</p></div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit"><span class="countdown-num" id="hours">--</span><p class="countdown-txt">Hours</p></div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit"><span class="countdown-num" id="mins">--</span><p class="countdown-txt">Mins</p></div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit"><span class="countdown-num" id="secs">--</span><p class="countdown-txt">Secs</p></div>
+          </div>
         </div>
       </div>
+      <div class="scroll-cue" aria-hidden="true"><span class="scroll-cue__line"></span></div>
     </div>
   </section>
 
-  <section id="mission">
-    <h2 class="section-title reveal">The Meaning of <em>Odyssey</em></h2>
-
-    <div class="content-block reveal">
-      <p><strong class="serif" style="color:var(--orange);font-weight:500;">Odyssey</strong>, from the Greek, means a journey filled with growth, challenges and discoveries. It symbolises a voyage through harsh waters and storms, a test of strength and resilience.</p>
-      <p>Much like school life. Every student embarks on a journey of personal growth. We're here to support each step, whether it is personal problems, academic struggles, or something else entirely. We lead them to success.</p>
-      <p class="tc">Odyssey 指的是一段充滿成長、挑戰與發現的旅程。這個源自希臘的名字，象徵著穿越險惡水域與風暴的艱難航程。</p>
-      <p class="tc">我們期盼能陪伴學生走過這趟旅程的每一步，無論是個人或學業上的問題，都將竭盡所能提供支援，引領他們邁向成功的里程碑。</p>
-    </div>
-    <h2 class="section-title reveal">What We <em>Do</em></h2>
-
-    <div class="content-block reveal">
-      <p>Learning doesn't stop at the classroom. We know that. At Odyssey, students come first. We lead by example, listen when it matters, and push for change where it's needed.</p>
-      <p>We're the bridge between students and the administration. Our job: make this year unforgettable.</p>
-      <p class="tc">我們深知，學生時代是成長、學習與共享體驗的重要篇章，其意義遠遠超越了課堂的範疇。</p>
-      <p class="tc">我們將每位學生的興趣放在首位。我們致力於以包容的態度引領、以謙遜的態度傾聽，並作為學生群體與校方管理層之間不可或缺的溝通橋樑。</p>
-    </div>
-
-    <div class="pillars reveal">
-      <a href="services.html" class="pillar-link">Services <span class="tc">服務</span></a>
-      <a href="activities.html" class="pillar-link">Activities <span class="tc">活動</span></a>
-      <a href="campus.html" class="pillar-link">Campus <span class="tc">校園改善</span></a>
-      <a href="joint-school.html" class="pillar-link">Joint-School Activities <span class="tc">聯校活動</span></a>
+  <section id="mission" class="scrub-mission">
+    <div class="mission-stage">
+      <div class="voyage-waves voyage-waves--mission" data-voyage-waves aria-hidden="true"><svg focusable="false"></svg></div>
+      <div class="scrub-beat" data-beat="0">
+        <div class="beat-frame">
+          <h2 class="section-title">The Meaning of <em>Odyssey</em></h2>
+          <div class="content-block">
+            <p><strong class="serif" style="color:var(--orange);font-weight:500;">Odyssey</strong>, from the Greek, means a journey filled with growth, challenges and discoveries. It symbolises a voyage through harsh waters and storms, a test of strength and resilience.</p>
+            <p>Much like school life. Every student embarks on a journey of personal growth. We're here to support each step, whether it is personal problems, academic struggles, or something else entirely. We lead them to success.</p>
+            <p class="tc">Odyssey 指的是一段充滿成長、挑戰與發現的旅程。這個源自希臘的名字，象徵著穿越險惡水域與風暴的艱難航程。</p>
+            <p class="tc">我們期盼能陪伴學生走過這趟旅程的每一步，無論是個人或學業上的問題，都將竭盡所能提供支援，引領他們邁向成功的里程碑。</p>
+          </div>
+        </div>
+      </div>
+      <div class="scrub-beat" data-beat="1">
+        <div class="beat-frame">
+          <h2 class="section-title">What We <em>Do</em></h2>
+          <div class="content-block">
+            <p>Learning doesn't stop at the classroom. We know that. At Odyssey, students come first. We lead by example, listen when it matters, and push for change where it's needed.</p>
+            <p>We're the bridge between students and the administration. Our job: make this year unforgettable.</p>
+            <p class="tc">我們深知，學生時代是成長、學習與共享體驗的重要篇章，其意義遠遠超越了課堂的範疇。</p>
+            <p class="tc">我們將每位學生的興趣放在首位。我們致力於以包容的態度引領、以謙遜的態度傾聽，並作為學生群體與校方管理層之間不可或缺的溝通橋樑。</p>
+          </div>
+          <div class="pillars">
+            <a href="services.html" class="pillar-link" data-spotlight><span class="pillar-index" aria-hidden="true">01</span>Services <span class="tc">服務</span></a>
+            <a href="activities.html" class="pillar-link" data-spotlight><span class="pillar-index" aria-hidden="true">02</span>Activities <span class="tc">活動</span></a>
+            <a href="campus.html" class="pillar-link" data-spotlight><span class="pillar-index" aria-hidden="true">03</span>Campus <span class="tc">校園改善</span></a>
+            <a href="joint-school.html" class="pillar-link" data-spotlight><span class="pillar-index" aria-hidden="true">04</span>Joint-School Activities <span class="tc">聯校活動</span></a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -725,139 +735,167 @@
   <section id="members">
     <h2 class="section-title reveal">Our <em>Cabinet</em></h2>
 
-    <div class="cabinet-list">
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/jovan.jpg" alt="Jovan"></div>
-          <p class="member-name">Jovan</p>
-          <p class="member-role">President</p>
-          <p class="member-tc">主席</p>
+    <div class="flow-stack" data-cabinet-flow>
+      <div class="flow-panel">
+        <div class="flow-panel-inner">
+          <header class="flow-head">
+            <p class="flow-index">01</p>
+            <h3 class="flow-label">The <em>Executive</em></h3>
+            <p class="flow-label-tc tc">主席與副主席</p>
+          </header>
+          <div class="cabinet-row reveal">
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/jovan.jpg" alt="Jovan"></div>
+              <p class="member-name">Jovan</p>
+              <p class="member-role">President</p>
+              <p class="member-tc">主席</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/jude.jpg" alt="Jude"></div>
+              <p class="member-name">Jude</p>
+              <p class="member-role">Internal Vice-President</p>
+              <p class="member-tc">內務副主席</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="C"><img loading="lazy" decoding="async" src="assets/members/chloe.jpg" alt="Chloe"></div>
+              <p class="member-name">Chloe</p>
+              <p class="member-role">External Vice-President</p>
+              <p class="member-tc">外務副主席</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/jude.jpg" alt="Jude"></div>
-          <p class="member-name">Jude</p>
-          <p class="member-role">Internal Vice-President</p>
-          <p class="member-tc">內務副主席</p>
-        </div>
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="C"><img loading="lazy" decoding="async" src="assets/members/chloe.jpg" alt="Chloe"></div>
-          <p class="member-name">Chloe</p>
-          <p class="member-role">External Vice-President</p>
-          <p class="member-tc">外務副主席</p>
-        </div>
-      </div>
-
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="A"><img loading="lazy" decoding="async" src="assets/members/adriel.jpg" alt="Adriel"></div>
-          <p class="member-name">Adriel</p>
-          <p class="member-role">Secretary (Internal)</p>
-          <p class="member-tc">內務秘書</p>
-        </div>
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="K"><img loading="lazy" decoding="async" src="assets/members/kaiser.jpg" alt="Kaiser"></div>
-          <p class="member-name">Kaiser</p>
-          <p class="member-role">Secretary (External)</p>
-          <p class="member-tc">外務秘書</p>
-        </div>
-      </div>
-
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="T"><img loading="lazy" decoding="async" src="assets/members/trevor.jpg" alt="Trevor"></div>
-          <p class="member-name">Trevor</p>
-          <p class="member-role">Treasurer</p>
-          <p class="member-tc">司庫</p>
+      <div class="flow-panel">
+        <div class="flow-panel-inner">
+          <header class="flow-head">
+            <p class="flow-index">02</p>
+            <h3 class="flow-label">The <em>Secretariat</em></h3>
+            <p class="flow-label-tc tc">秘書與司庫</p>
+          </header>
+          <div class="cabinet-row reveal">
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="A"><img loading="lazy" decoding="async" src="assets/members/adriel.jpg" alt="Adriel"></div>
+              <p class="member-name">Adriel</p>
+              <p class="member-role">Secretary (Internal)</p>
+              <p class="member-tc">內務秘書</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="K"><img loading="lazy" decoding="async" src="assets/members/kaiser.jpg" alt="Kaiser"></div>
+              <p class="member-name">Kaiser</p>
+              <p class="member-role">Secretary (External)</p>
+              <p class="member-tc">外務秘書</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="T"><img loading="lazy" decoding="async" src="assets/members/trevor.jpg" alt="Trevor"></div>
+              <p class="member-name">Trevor</p>
+              <p class="member-role">Treasurer</p>
+              <p class="member-tc">司庫</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="L"><img loading="lazy" decoding="async" src="assets/members/lynn.jpg" alt="Lynn"></div>
-          <p class="member-name">Lynn</p>
-          <p class="member-role">Recreational & Activities Board</p>
-          <p class="member-tc">康樂及活動組</p>
-        </div>
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/joshua.jpg" alt="Joshua"></div>
-          <p class="member-name">Joshua</p>
-          <p class="member-role">Recreational & Activities Board</p>
-          <p class="member-tc">康樂及活動組</p>
-        </div>
-      </div>
-
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="K"><img loading="lazy" decoding="async" src="assets/members/katie.jpg" alt="Katie"></div>
-          <p class="member-name">Katie</p>
-          <p class="member-role">Welfare Board</p>
-          <p class="member-tc">福利組</p>
-        </div>
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="S"><img loading="lazy" decoding="async" src="assets/members/sean.jpg" alt="Sean"></div>
-          <p class="member-name">Sean</p>
-          <p class="member-role">Welfare Board</p>
-          <p class="member-tc">福利組</p>
-        </div>
-      </div>
-
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="A"><img loading="lazy" decoding="async" src="assets/members/avery.jpg" alt="Avery"></div>
-          <p class="member-name">Avery</p>
-          <p class="member-role">Promotion Board</p>
-          <p class="member-tc">宣傳組</p>
-        </div>
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="R"><img loading="lazy" decoding="async" src="assets/members/rayna.jpg" alt="Rayna"></div>
-          <p class="member-name">Rayna</p>
-          <p class="member-role">Promotion Board</p>
-          <p class="member-tc">宣傳組</p>
+      <div class="flow-panel">
+        <div class="flow-panel-inner">
+          <header class="flow-head">
+            <p class="flow-index">03</p>
+            <h3 class="flow-label">Student <em>Life</em></h3>
+            <p class="flow-label-tc tc">康樂及活動 · 福利 · 學生協調</p>
+          </header>
+          <div class="cabinet-row reveal">
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="L"><img loading="lazy" decoding="async" src="assets/members/lynn.jpg" alt="Lynn"></div>
+              <p class="member-name">Lynn</p>
+              <p class="member-role">Recreational & Activities Board</p>
+              <p class="member-tc">康樂及活動組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="J"><img loading="lazy" decoding="async" src="assets/members/joshua.jpg" alt="Joshua"></div>
+              <p class="member-name">Joshua</p>
+              <p class="member-role">Recreational & Activities Board</p>
+              <p class="member-tc">康樂及活動組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="K"><img loading="lazy" decoding="async" src="assets/members/katie.jpg" alt="Katie"></div>
+              <p class="member-name">Katie</p>
+              <p class="member-role">Welfare Board</p>
+              <p class="member-tc">福利組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="S"><img loading="lazy" decoding="async" src="assets/members/sean.jpg" alt="Sean"></div>
+              <p class="member-name">Sean</p>
+              <p class="member-role">Welfare Board</p>
+              <p class="member-tc">福利組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="I"><img loading="lazy" decoding="async" src="assets/members/isaac.jpg" alt="Isaac"></div>
+              <p class="member-name">Isaac</p>
+              <p class="member-role">Student Coordinator</p>
+              <p class="member-tc">學生協調員</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="D"><img loading="lazy" decoding="async" src="assets/members/dave.jpg" alt="Dave"></div>
-          <p class="member-name">Dave</p>
-          <p class="member-role">Public Relations Board</p>
-          <p class="member-tc">公關組</p>
+      <div class="flow-panel">
+        <div class="flow-panel-inner">
+          <header class="flow-head">
+            <p class="flow-index">04</p>
+            <h3 class="flow-label">Promotion <em>&</em> Public Relations</h3>
+            <p class="flow-label-tc tc">宣傳 · 公關</p>
+          </header>
+          <div class="cabinet-row reveal">
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="A"><img loading="lazy" decoding="async" src="assets/members/avery.jpg" alt="Avery"></div>
+              <p class="member-name">Avery</p>
+              <p class="member-role">Promotion Board</p>
+              <p class="member-tc">宣傳組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="R"><img loading="lazy" decoding="async" src="assets/members/rayna.jpg" alt="Rayna"></div>
+              <p class="member-name">Rayna</p>
+              <p class="member-role">Promotion Board</p>
+              <p class="member-tc">宣傳組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="D"><img loading="lazy" decoding="async" src="assets/members/dave.jpg" alt="Dave"></div>
+              <p class="member-name">Dave</p>
+              <p class="member-role">Public Relations Board</p>
+              <p class="member-tc">公關組</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="M"><img loading="lazy" decoding="async" src="assets/members/manson.jpg" alt="Manson"></div>
-          <p class="member-name">Manson</p>
-          <p class="member-role">Academic Board</p>
-          <p class="member-tc">學術組</p>
-        </div>
-      </div>
-
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="G"><img loading="lazy" decoding="async" src="assets/members/gabriel.jpg" alt="Gabriel"></div>
-          <p class="member-name">Gabriel</p>
-          <p class="member-role">General Affairs Board</p>
-          <p class="member-tc">總務組</p>
-        </div>
-      </div>
-
-      <div class="cabinet-row reveal">
-        <div class="cabinet-member">
-          <div class="member-photo" data-initial="I"><img loading="lazy" decoding="async" src="assets/members/isaac.jpg" alt="Isaac"></div>
-          <p class="member-name">Isaac</p>
-          <p class="member-role">Student Coordinator</p>
-          <p class="member-tc">學生協調員</p>
+      <div class="flow-panel">
+        <div class="flow-panel-inner">
+          <header class="flow-head">
+            <p class="flow-index">05</p>
+            <h3 class="flow-label">Academic <em>&</em> General Affairs</h3>
+            <p class="flow-label-tc tc">學術 · 總務</p>
+          </header>
+          <div class="cabinet-row reveal">
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="M"><img loading="lazy" decoding="async" src="assets/members/manson.jpg" alt="Manson"></div>
+              <p class="member-name">Manson</p>
+              <p class="member-role">Academic Board</p>
+              <p class="member-tc">學術組</p>
+            </div>
+            <div class="cabinet-member">
+              <div class="member-photo" data-initial="G"><img loading="lazy" decoding="async" src="assets/members/gabriel.jpg" alt="Gabriel"></div>
+              <p class="member-name">Gabriel</p>
+              <p class="member-role">General Affairs Board</p>
+              <p class="member-tc">總務組</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <div class="logo-showcase reveal">
+    <div class="voyage-waves voyage-waves--closing" data-voyage-waves aria-hidden="true"><svg focusable="false"></svg></div>
     <img src="assets/logo.png" alt="Odyssey">
     <h3>Cabinet <em>Odyssey</em></h3>
     <p class="tc">一號候選內閣 Odyssey</p>
@@ -939,6 +977,16 @@
 
     // Countdown to Sept 28, 2026
     const votingDay = new Date('2026-09-28T09:00:00+08:00').getTime();
+    function setUnit(id, value) {
+      const el = document.getElementById(id);
+      const text = String(value);
+      if (el.textContent === text) return;
+      el.textContent = text;
+      // Re-trigger the arrival animation only when the digit actually changes.
+      el.classList.remove('is-ticking');
+      void el.offsetWidth;
+      el.classList.add('is-ticking');
+    }
     function updateCountdown() {
       const now = Date.now();
       const diff = votingDay - now;
@@ -950,15 +998,20 @@
       const h = Math.floor((diff % 86400000) / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
       const s = Math.floor((diff % 60000) / 1000);
-      document.getElementById('days').textContent = d;
-      document.getElementById('hours').textContent = h;
-      document.getElementById('mins').textContent = m;
-      document.getElementById('secs').textContent = s;
+      setUnit('days', d);
+      setUnit('hours', h);
+      setUnit('mins', m);
+      setUnit('secs', s);
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
   <script src="assets/js/odyssey-ui.js?v=motion-1" defer></script>
+  <script src="assets/js/odyssey-motion.js?v=route-6" defer></script>
+  <script src="assets/js/vendor/gsap.min.js" defer></script>
+  <script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/odyssey-gsap.js?v=4" defer></script>
+  <script src="assets/js/odyssey-elements.js?v=2" defer></script>
 
 </body>
 </html>

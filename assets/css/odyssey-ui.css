@@ -3,6 +3,7 @@
 
 :root {
   --odyssey-teal: #2a4a5a;
+  --odyssey-teal-rgb: 42, 74, 90;
   --odyssey-teal-deep: #1e3a4a;
   --odyssey-night: #162e3e;
   --odyssey-orange: #e8773a;
@@ -321,26 +322,30 @@ body.subpage .btn {
 
 .home-page .hero-bg {
   width: 100%;
-  max-height: 520px;
+  max-height: 580px;
   overflow: hidden;
   background: var(--odyssey-teal);
 }
 
 .home-page .hero-bg img {
   width: 100%;
-  height: clamp(270px, 36vw, 520px);
+  height: clamp(300px, 42vw, 580px);
   object-fit: cover;
   object-position: center;
 }
 
 .home-page .hero-bg::after {
-  background: rgba(22, 46, 62, .12);
+  background: linear-gradient(180deg,
+    rgba(22, 46, 62, .12) 0%,
+    rgba(22, 46, 62, .12) 74%,
+    rgba(22, 46, 62, .6) 90%,
+    var(--odyssey-night) 100%);
 }
 
 .home-page .hero-content {
-  width: min(calc(100% - 32px), 760px);
-  margin: -96px auto 0;
-  padding: 40px 48px 44px;
+  width: min(calc(100% - 32px), 1000px);
+  margin: -104px auto 0;
+  padding: 52px 60px 56px;
   background: var(--odyssey-teal);
   border-top: 1px solid var(--odyssey-line-strong);
   text-align: center;
@@ -369,10 +374,10 @@ body.subpage .btn {
 }
 
 .home-page .hero-title {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: var(--odyssey-orange);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-size: clamp(3.8rem, 9vw, 7rem);
   font-weight: 500;
   line-height: .92;
 }
@@ -389,7 +394,7 @@ body.subpage .btn {
 }
 
 .home-page .countdown {
-  max-width: 520px;
+  max-width: 560px;
   margin: 28px auto 0;
   padding: 16px 0 6px;
   background: transparent;
@@ -442,7 +447,9 @@ body.subpage .btn {
   width: min(calc(100% - 48px), var(--odyssey-content));
   max-width: none;
   margin: 0 auto;
-  padding: clamp(64px, 8vw, 104px) 0;
+  /* The air between sections is the premium signal: a full breath at every
+     viewport, tuned in viewport heights so short laptops stay balanced. */
+  padding: clamp(104px, 15vh, 184px) 0;
 }
 
 .home-page #mission {
@@ -453,13 +460,13 @@ body.subpage .btn {
 }
 
 .home-page .section-title {
-  margin-bottom: 32px;
+  margin-bottom: 44px;
   color: var(--odyssey-cream);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  font-size: clamp(2.75rem, 6vw, 5rem);
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -.02em;
+  line-height: 1.05;
+  letter-spacing: -.015em;
 }
 
 .home-page .section-title em {
@@ -468,21 +475,45 @@ body.subpage .btn {
   font-style: italic;
 }
 
+/* The spotlight signal: when a section becomes the one being read, a hairline
+   rule sweeps open under its title — the same underline motif as the nav.
+   The left edge starts on the page route's spine (container left + 3.5px)
+   so the two meet as a perpendicular junction instead of crossing. */
+.home-page .section-title::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 1px;
+  margin-top: 22px;
+  margin-left: 3px;
+  background: var(--odyssey-orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 900ms var(--odyssey-ease-in-out) 120ms;
+}
+
+.home-page .has-entered .section-title::after,
+.home-page .section-title.has-entered::after {
+  transform: scaleX(1);
+}
+
 .home-page .content-block {
-  max-width: 760px;
-  margin-bottom: 48px;
+  max-width: 700px;
+  margin-bottom: 56px;
 }
 
 .home-page .content-block p {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   color: var(--odyssey-muted);
-  font-size: 1rem;
-  line-height: 1.8;
+  font-size: 1.06rem;
+  line-height: 1.85;
+  letter-spacing: .005em;
 }
 
 .home-page .content-block p.tc {
   color: var(--odyssey-muted);
-  font-size: .95rem;
+  font-size: .98rem;
+  line-height: 2;
 }
 
 .home-page .pillars {
@@ -519,7 +550,7 @@ body.subpage .btn {
 
 .home-page .timeline {
   max-width: 800px;
-  padding-left: 28px;
+  padding-left: 32px;
 }
 
 .home-page .timeline::before {
@@ -530,39 +561,32 @@ body.subpage .btn {
 }
 
 .home-page .timeline-item {
-  padding-bottom: 44px;
-}
-
-.home-page .timeline-item::before {
-  left: -25px;
-  top: 6px;
-  width: 7px;
-  height: 7px;
-  background: var(--odyssey-orange);
-  transform: none;
+  padding-bottom: 60px;
 }
 
 .home-page .timeline-date {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: var(--odyssey-orange-soft);
   font-size: .68rem;
   font-weight: 500;
-  letter-spacing: .12em;
+  letter-spacing: .14em;
 }
 
 .home-page .timeline-title {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: var(--odyssey-cream);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.7rem;
+  font-size: 1.95rem;
   font-weight: 600;
+  line-height: 1.15;
 }
 
 .home-page .timeline-desc,
 .home-page .timeline-tc {
-  max-width: 680px;
+  max-width: 640px;
   color: var(--odyssey-muted);
-  font-size: .92rem;
+  font-size: .95rem;
+  line-height: 1.75;
 }
 
 .home-page .timeline-tc {
@@ -615,11 +639,11 @@ body.subpage .btn {
 }
 
 .home-page .doc-link {
-  min-height: 142px;
+  min-height: 176px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 24px;
+  padding: 30px 32px;
   color: var(--odyssey-cream);
   background: var(--odyssey-teal);
   text-decoration: none;
@@ -627,10 +651,10 @@ body.subpage .btn {
 }
 
 .home-page .doc-link-title {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: inherit;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.45rem;
+  font-size: 1.65rem;
 }
 
 .home-page .doc-link-sub {
@@ -641,7 +665,7 @@ body.subpage .btn {
 
 .home-page footer {
   margin-top: 0;
-  padding: 64px 24px 32px;
+  padding: 108px 24px 40px;
   background: var(--odyssey-night);
 }
 
@@ -1229,7 +1253,10 @@ html.motion-ready .service-panel.visible .service-listing-card:nth-child(n + 7) 
 
 .home-page .hero-bg img {
   transform-origin: center;
-  animation: odyssey-hero-image-enter 1100ms var(--odyssey-ease-in-out) both;
+  /* `backwards`, not `both`: the motion engine owns this element's transform
+     after the entrance, and a forwards fill would outrank the inline style. */
+  animation: odyssey-hero-image-enter 1100ms var(--odyssey-ease-in-out) backwards;
+  will-change: transform;
 }
 
 .home-page .hero-content > * {
@@ -1265,27 +1292,6 @@ body.subpage section:first-of-type .text-center > :nth-child(3) {
 .motion-ready .home-page .timeline.is-visible::before {
   transform: scaleY(1);
 }
-
-.motion-ready .home-page .timeline-item::before {
-  opacity: 0;
-  transform: scale(.6);
-  transition: opacity 260ms var(--odyssey-ease-out), transform 260ms var(--odyssey-ease-out);
-}
-
-.motion-ready .home-page .timeline.is-visible .timeline-item::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.motion-ready .home-page .timeline-item:nth-child(1)::before { transition-delay: 60ms; }
-.motion-ready .home-page .timeline-item:nth-child(2)::before { transition-delay: 110ms; }
-.motion-ready .home-page .timeline-item:nth-child(3)::before { transition-delay: 160ms; }
-.motion-ready .home-page .timeline-item:nth-child(4)::before { transition-delay: 210ms; }
-.motion-ready .home-page .timeline-item:nth-child(5)::before { transition-delay: 260ms; }
-.motion-ready .home-page .timeline-item:nth-child(6)::before { transition-delay: 310ms; }
-.motion-ready .home-page .timeline-item:nth-child(7)::before { transition-delay: 360ms; }
-.motion-ready .home-page .timeline-item:nth-child(8)::before { transition-delay: 410ms; }
-.motion-ready .home-page .timeline-item:nth-child(9)::before { transition-delay: 460ms; }
 
 .mobile-menu a {
   opacity: 0;
@@ -1361,7 +1367,8 @@ body.subpage section,
 }
 
 .home-page .hero-content {
-  animation: odyssey-piece-enter 520ms var(--odyssey-ease-out) 120ms both;
+  animation: odyssey-piece-enter 520ms var(--odyssey-ease-out) 120ms backwards;
+  will-change: transform, opacity;
 }
 
 body.subpage section:first-of-type .text-center > * {
@@ -1696,13 +1703,6 @@ body.subpage footer p {
     transform: translateX(4px) scale(1.018);
   }
 
-  .home-page .timeline-item:hover::before,
-  .motion-ready .home-page .timeline.is-visible .timeline-item:hover::before {
-    opacity: 1;
-    transform: scale(1.55);
-    transition-delay: 0ms;
-  }
-
   .home-page .cabinet-member {
     transform-origin: center;
     transition: transform 280ms var(--odyssey-ease-in-out);
@@ -1759,20 +1759,17 @@ body.subpage footer p {
   }
 
   .motion-ready .home-page .timeline::before,
-  .motion-ready .home-page .timeline-item::before,
   .mobile-menu a {
     transform: none !important;
     transition: opacity 160ms ease !important;
   }
 
-  .motion-ready .home-page .timeline::before,
-  .motion-ready .home-page .timeline-item::before {
+  .motion-ready .home-page .timeline::before {
     opacity: 1;
   }
 
   .home-page .timeline-item:hover,
   .motion-ready .home-page .timeline-item.visible:hover,
-  .home-page .timeline-item:hover::before,
   .home-page .cabinet-member:hover,
   .home-page .cabinet-member:hover .member-photo,
   .home-page .cabinet-member:hover .member-photo img {
@@ -1874,5 +1871,650 @@ body.subpage footer p {
 
   .service-listing-card:hover {
     transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Motion engine layer: scroll cue, spotlight states, the page route line,
+   the pinned mission scrub stage, and section colour shifts. Everything
+   here is scoped to the home page and driven by assets/js/odyssey-motion.js.
+   Reduced-motion users get none of the motion but keep every piece of
+   navigation and the full static layout.
+   ========================================================================== */
+
+/* With JS present the page controls its own scrolling, so the CSS smooth
+   behavior must stand down (it would fight the per-frame glide). */
+
+html.engine-scroll,
+html.motion-observed {
+  scroll-behavior: auto;
+}
+
+/* ---------- nav: current section ---------- */
+
+#nav .links a.is-current {
+  color: var(--odyssey-orange-soft);
+}
+
+#nav .links a.is-current::after {
+  transform: scaleX(1);
+}
+
+/* ---------- hero scroll cue ---------- */
+
+.scroll-cue {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: .8;
+}
+
+.scroll-cue__line {
+  display: block;
+  width: 1px;
+  height: 46px;
+  background: rgba(240, 220, 192, .18);
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-cue__line::after {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 1px;
+  height: 14px;
+  background: var(--odyssey-orange);
+  animation: odyssey-cue-drift 2.3s var(--odyssey-ease-in-out) infinite;
+}
+
+@keyframes odyssey-cue-drift {
+  0% { transform: translateY(0); }
+  70%, 100% { transform: translateY(60px); }
+}
+
+@media (max-width: 640px) {
+  .scroll-cue {
+    display: none;
+  }
+}
+
+/* ---------- countdown digit arrival ---------- */
+
+@keyframes odyssey-num-tick {
+  from {
+    opacity: 0;
+    transform: translateY(.38em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-page .countdown-num.is-ticking {
+  animation: odyssey-num-tick 460ms var(--odyssey-ease-out);
+}
+
+/* ---------- cabinet breathing room ---------- */
+
+.home-page .cabinet-row {
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  margin-bottom: clamp(2.75rem, 5vh, 4rem);
+}
+
+.home-page .member-photo {
+  width: 128px;
+  height: 128px;
+}
+
+.home-page .member-name {
+  font-size: 1.2rem;
+}
+
+.home-page .pillars {
+  margin-top: 56px;
+}
+
+.home-page .pillar-link {
+  min-height: 96px;
+}
+
+/* ---------- first paint: rail waits for the hero arrival ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue__line::after,
+  .home-page .countdown-num.is-ticking {
+    animation: none;
+  }
+
+  .home-page .section-title::after {
+    transition: none;
+    transform: scaleX(1);
+  }
+
+  .home-page .hero-bg img,
+  .home-page .hero-content {
+    will-change: auto;
+  }
+}
+
+/* ==========================================================================
+   Banner + countdown scrub (html.hero-scrub, set by odyssey-motion.js).
+   The hero becomes a two-viewport scroll region holding a pinned 100svh
+   stage. Load state: banner and identity card stacked, timer withheld.
+   One viewport of scroll: the banner lifts away, the card grows into the
+   stage, and the countdown surfaces. odyssey-motion.js scrubs the per-frame
+   geometry (top/height/width/opacity); this block defines the two endpoints.
+   Without the class (no JS, reduced motion, short viewport) the stacked
+   static layout above still applies, timer visible.
+   ========================================================================== */
+
+/* The legacy hero is a centering flex column; left alone it shrink-to-fits
+   the stage (whose children are absolutely positioned) down to zero. */
+.hero-stage {
+  width: 100%;
+}
+
+html.hero-scrub .home-page .hero {
+  /* Ideal load-state banner height; odyssey-motion.js shrinks it per viewport
+     so banner + card + the card's bottom edge all fit the pinned stage. */
+  --hero-banner-h: clamp(300px, 42vw, 580px);
+  height: 200vh;
+  height: 200svh;
+  padding-bottom: 0;
+  /* `overflow: hidden` from the legacy hero rule would trap the sticky
+     stage inside a non-scrolling scroll container and pin nothing. */
+  overflow: visible;
+}
+
+html.hero-scrub .hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  background: var(--odyssey-night);
+}
+
+html.hero-scrub .home-page .hero-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--hero-banner-h);
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+html.hero-scrub .home-page .hero-bg img {
+  height: 100%;
+}
+
+html.hero-scrub .home-page .hero-content {
+  position: absolute;
+  top: calc(var(--hero-banner-h) - 104px);
+  right: 0;
+  left: 0;
+  z-index: 2;
+  /* Flex centering keeps the stack optically centered while the card grows
+     into the stage; at the natural-height start it is identical to block flow. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  /* At rest the card is frosted glass over the banner (odyssey-motion.js
+     scrubs --hero-glass 0 → 1 with scroll), so it does not read as a solid
+     slab; at the fullscreen focus state it is fully solid again. */
+  background-color: rgba(var(--odyssey-teal-rgb), calc(.55 + .45 * var(--hero-glass, 0)));
+  -webkit-backdrop-filter: blur(calc(18px * (1 - var(--hero-glass, 0))));
+  backdrop-filter: blur(calc(18px * (1 - var(--hero-glass, 0))));
+}
+
+html.hero-scrub .home-page .countdown {
+  opacity: 0;
+  transform: translateY(12px);
+  /* The engine drives height from 0 to natural as the timer fades in, so the
+     collapsed block leaves no dead space in the card at load. */
+  overflow: hidden;
+}
+
+html.hero-scrub .scroll-cue {
+  z-index: 3;
+}
+
+@media (max-width: 640px) {
+  html.hero-scrub .home-page .hero {
+    --hero-banner-h: 220px;
+    padding-bottom: 0;
+  }
+
+  html.hero-scrub .home-page .hero-content {
+    top: calc(var(--hero-banner-h) - 24px);
+  }
+}
+
+/* ==========================================================================
+   GSAP layer (assets/js/odyssey-gsap.js + assets/js/vendor). When
+   html.gsap-on is present GSAP owns entrances and reveals, so the legacy
+   CSS entrance/reveal states stand down — the two systems must never
+   animate the same property. Without GSAP (vendor missing, script error,
+   reduced motion) none of this applies and the legacy layer works as before.
+   ========================================================================== */
+
+html.gsap-on .home-page .hero-bg img,
+html.gsap-on .home-page .hero-content,
+html.gsap-on body.subpage section:first-of-type .text-center {
+  animation: none !important;
+  will-change: auto;
+}
+
+html.gsap-on .motion-ready .reveal {
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
+/* GSAP tweens the timeline items' opacity directly; the 420ms CSS reveal
+   transition would chase every tween step and turn the entrance mushy.
+   Hover feedback on the item itself stays instant in this mode. */
+html.gsap-on .motion-ready .home-page .timeline-item.visible {
+  transition: none;
+}
+
+/* Masked word reveals (built by odyssey-gsap.js splitWords). The padding /
+   negative-margin pair keeps descenders (g, y) and italic overhang inside
+   the mask without disturbing the surrounding line layout. */
+.gsap-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0 0.08em 0.14em;
+  margin: 0 -0.08em -0.14em;
+  vertical-align: bottom;
+}
+
+.gsap-word {
+  display: inline-block;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gsap-word {
+    transform: none !important;
+  }
+
+  .gsap-mask {
+    overflow: visible;
+  }
+}
+
+/* ==========================================================================
+   Micro-interactions and ambient motion. CSS-only where possible; the GSAP
+   layer adds the scroll-driven and pointer-driven pieces on top. All of it
+   degrades to the static state under reduced motion or when gsap is absent.
+   ========================================================================== */
+
+/* Countdown digits: under GSAP the roll tween owns the tick. */
+html.gsap-on .home-page .countdown-num.is-ticking {
+  animation: none;
+}
+
+/* The events line fills with solid orange as the reader travels it;
+   --tl-fill (0–100) is written by odyssey-gsap.js. Without GSAP the var
+   stays 0 and the line keeps its original dim color. */
+html.gsap-on .home-page .timeline::before {
+  opacity: 1;
+  background: linear-gradient(
+    to bottom,
+    var(--odyssey-orange) calc(var(--tl-fill, 0) * 1%),
+    rgba(232, 119, 58, 0.4) calc(var(--tl-fill, 0) * 1%)
+  );
+}
+
+/* Nav brand breathes on hover. */
+#nav .brand {
+  transition: opacity 300ms ease, letter-spacing 320ms var(--odyssey-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #nav .brand:hover {
+    letter-spacing: 0.1em;
+  }
+}
+
+/* Hamburger morphs into a close cross while the menu is open. */
+body.menu-open .menu-toggle__icon {
+  background: transparent;
+}
+
+body.menu-open .menu-toggle__icon::before {
+  transform: translateY(0) rotate(45deg);
+}
+
+body.menu-open .menu-toggle__icon::after {
+  transform: translateY(0) rotate(-45deg);
+}
+
+/* Portraits sit slightly desaturated until their member is hovered. */
+@media (hover: hover) and (pointer: fine) {
+  .home-page .member-photo img {
+    filter: saturate(0.82);
+    transition: filter 320ms ease, transform 280ms var(--odyssey-ease-in-out);
+  }
+
+  .home-page .cabinet-member:hover .member-photo img {
+    filter: saturate(1.08);
+  }
+}
+
+/* Cross-document view transitions between the five pages. Unsupported
+   browsers simply navigate without the crossfade. */
+@view-transition {
+  navigation: normal;
+}
+
+::view-transition-old(root) {
+  animation: 240ms var(--odyssey-ease-out) both odyssey-page-out;
+}
+
+::view-transition-new(root) {
+  animation: 340ms var(--odyssey-ease-out) 60ms both odyssey-page-in;
+}
+
+@keyframes odyssey-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes odyssey-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Mission scrub stage: "The Meaning of Odyssey" and "What We Do" become a
+   pinned two-beat stage. Base styles keep both beats stacked statically
+   (no JS, reduced motion, narrow viewports); html.mission-scrub turns the
+   section into a tall wrapper holding a pinned 100svh stage whose beats
+   crossfade under scroll. The frame boxes around the beats are drawn by
+   the page-route SVG, not borders.
+   ========================================================================== */
+
+.scrub-mission {
+  min-width: 0;
+}
+
+.mission-stage {
+  width: 100%;
+}
+
+.scrub-beat {
+  position: relative;
+}
+
+.scrub-beat + .scrub-beat {
+  margin-top: clamp(56px, 8vh, 96px);
+}
+
+.beat-frame {
+  width: 100%;
+}
+
+/* The id-level selector is required: the legacy `.home-page #mission` band
+   rule (padding + background) outranks any class-only override. */
+html.mission-scrub .home-page #mission {
+  width: 100%;
+  height: 330vh;
+  height: 330svh;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+}
+
+html.mission-scrub .mission-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+}
+
+html.mission-scrub .scrub-beat {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--odyssey-nav-height) + 40px) 48px 44px;
+  will-change: transform, opacity;
+}
+
+html.mission-scrub .scrub-beat[data-beat="0"] {
+  opacity: 1;
+}
+
+html.mission-scrub .scrub-beat[data-beat="1"] {
+  opacity: 0;
+}
+
+html.mission-scrub .beat-frame {
+  padding: clamp(48px, 8vh, 96px) clamp(48px, 5.5vw, 96px);
+}
+
+/* Frame one is narrower than frame two so the dot's journey between the
+   boxes has real distance: it exits the first trace, crosses the gap and
+   climbs the second box's edge while the beats crossfade. */
+html.mission-scrub .scrub-beat[data-beat="0"] .beat-frame {
+  width: min(100%, 860px);
+}
+
+html.mission-scrub .scrub-beat[data-beat="1"] .beat-frame {
+  width: min(100%, 1010px);
+}
+
+/* Copy inside the frame starts dim and lights up in a stagger when its beat
+   takes over — the "graphics light up" pass, driven by .is-live from the
+   engine at the beat's crossfade point. Elements carrying the line-split
+   reveal opt out: their lines own the entrance instead. */
+
+html.mission-scrub .scrub-beat .beat-frame > * {
+  opacity: .24;
+  transform: translateY(14px);
+  transition: opacity 520ms var(--odyssey-ease-out), transform 520ms var(--odyssey-ease-out);
+}
+
+html.mission-scrub .scrub-beat.is-live .beat-frame > * {
+  opacity: 1;
+  transform: none;
+}
+
+html.mission-scrub .scrub-beat .beat-frame > .line-split {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* ---------- the "Lines" reveal ---------- */
+
+/* Each rendered line sits in its own overflow mask; the inner span rises
+   out of it with a soft blur that sharpens, staggered per line. Built by
+   odyssey-motion.js when the mission scrub is on. */
+
+html.mission-scrub .scrub-beat .line-split .tok {
+  display: inline-block;
+}
+
+html.mission-scrub .scrub-beat .line-split .line-mask {
+  display: block;
+  overflow: hidden;
+  /* Descenders and italic overhang survive the mask; the negative margin
+     gives the space back to the flow. */
+  padding: 0 .06em .14em;
+  margin: 0 -.06em -.14em;
+}
+
+html.mission-scrub .scrub-beat .line-split .line-inner {
+  display: block;
+  opacity: 0;
+  transform: translateY(115%);
+  filter: blur(6px);
+  will-change: transform, opacity, filter;
+  transition:
+    transform .9s cubic-bezier(.19, 1, .26, 1) calc(var(--li, 0) * 105ms + 90ms),
+    opacity .55s ease calc(var(--li, 0) * 105ms + 200ms),
+    filter .8s ease calc(var(--li, 0) * 105ms + 140ms);
+}
+
+html.mission-scrub .scrub-beat.lines-in .line-split .line-inner {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+html.mission-scrub .scrub-beat .beat-frame > :nth-child(2) { transition-delay: 90ms; }
+html.mission-scrub .scrub-beat .beat-frame > :nth-child(3) { transition-delay: 180ms; }
+html.mission-scrub .scrub-beat .beat-frame > :nth-child(4) { transition-delay: 270ms; }
+
+html.mission-scrub .scrub-beat .content-block {
+  margin-bottom: 0;
+}
+
+@media (max-height: 899px) {
+  html.mission-scrub .scrub-beat {
+    align-items: flex-start;
+    padding-top: calc(var(--odyssey-nav-height) + 28px);
+  }
+
+  html.mission-scrub .scrub-beat .section-title {
+    font-size: clamp(2.2rem, 4.6vh, 3.4rem);
+  }
+
+  html.mission-scrub .scrub-beat .content-block p {
+    font-size: .98rem;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  html.mission-scrub .beat-frame {
+    padding: 36px 48px;
+  }
+}
+
+/* ==========================================================================
+   Page route: the zig-zag line + travelling square dot that runs the whole
+   page — a horizontal sweep and frame traces through the pinned mission
+   stage, a vertical drop down the events spine and cabinet rows, a
+   horizontal pass across the showcase, a right-side run through the docs
+   band, and a terminal drop in the footer. One fixed SVG, rebuilt each
+   frame in viewport coordinates by odyssey-motion.js; the dim base path
+   previews the route ahead, the lit trail follows the dot.
+   ========================================================================== */
+
+.page-route {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html.route-on .page-route {
+  display: block;
+}
+
+@media (max-width: 899px), (pointer: coarse) {
+  html.route-on .page-route {
+    display: none;
+  }
+}
+
+.route-base {
+  fill: none;
+  stroke: rgba(240, 220, 192, .26);
+  stroke-width: 1;
+}
+
+.route-lit {
+  fill: none;
+  stroke: rgba(232, 119, 58, .95);
+  stroke-width: 1.5;
+}
+
+.route-dot {
+  fill: var(--odyssey-orange);
+  filter: drop-shadow(0 0 7px rgba(232, 119, 58, .8));
+}
+
+/* The route owns the events spine: the timeline's own hairline stands down
+   so the travelling dot rides a single continuous line. */
+
+html.route-on .home-page .timeline::before {
+  opacity: 0;
+}
+
+html.route-on .home-page .cabinet-row .member-photo {
+  border-color: rgba(240, 220, 192, .14);
+  transition: border-color 520ms ease;
+}
+
+html.route-on .home-page .cabinet-row.is-lit .member-photo {
+  border-color: rgba(232, 119, 58, .5);
+}
+
+/* ==========================================================================
+   Section colour shifts (html.color-scrub): the body background morphs
+   between night and teal as sections hand over, so section sheets go
+   transparent and let the body show through. Components that assumed a
+   fixed section colour restyle here.
+   ========================================================================== */
+
+html.color-scrub .home-page #mission {
+  background: transparent;
+}
+
+html.color-scrub .home-page .logo-showcase {
+  background: transparent;
+}
+
+html.color-scrub .home-page .doc-link {
+  background: rgba(22, 46, 62, .62);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.color-scrub .home-page .doc-link:hover {
+    background: rgba(22, 46, 62, .9) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.route-on .page-route,
+  html.mission-scrub .scrub-beat,
+  html.mission-scrub .scrub-beat .beat-frame > * {
+    transition: none;
+  }
+
+  html.mission-scrub .scrub-beat .line-split .line-inner {
+    transform: none;
+    opacity: 1;
+    filter: none;
+    transition: none;
   }
 }

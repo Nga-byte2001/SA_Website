@@ -1,0 +1,179 @@
+/* Wave Background (xubohuah) and Spotlight Card (preetsuthar17), adapted
+   from 21st.dev. Source links and adaptation notes: docs/21st-dev-elements.md. */
+
+.voyage-waves {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--odyssey-orange-soft);
+  contain: layout paint;
+}
+
+.voyage-waves svg { display: block; width: 100%; height: 100%; }
+.voyage-waves path { fill: none; stroke: currentColor; stroke-width: 1; }
+
+.home-page .hero-content { isolation: isolate; }
+.home-page .hero-content > .voyage-waves--hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  z-index: -1;
+  opacity: .4;
+  animation: none;
+  transform: none;
+  mask-image: linear-gradient(90deg, #000 0%, #000 8%, transparent 34%, transparent 66%, #000 92%, #000 100%);
+}
+
+.home-page .hero-content > .hero-edition,
+.home-page .hero-content > .hero-year {
+  position: absolute;
+  top: 28px;
+  margin: 0;
+  width: auto;
+  color: var(--odyssey-muted);
+  font-size: .62rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  animation: none;
+}
+.home-page .hero-edition { left: 30px; }
+.home-page .hero-year { right: 30px; }
+
+.mission-stage { position: relative; isolation: isolate; }
+.voyage-waves--mission {
+  z-index: -1;
+  opacity: .13;
+  mask-image: linear-gradient(90deg, #000, transparent 28%, transparent 72%, #000);
+}
+
+[data-spotlight] { position: relative; isolation: isolate; overflow: hidden; }
+.odyssey-spotlight {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(246, 170, 119, .19), transparent 70%);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+[data-spotlight]:focus-visible { outline: 2px solid var(--odyssey-orange-soft); outline-offset: 4px; }
+[data-spotlight]:focus-visible .odyssey-spotlight { opacity: .7; }
+
+.home-page .pillar-link {
+  min-height: 112px;
+  padding: 16px 20px;
+  background: rgba(22, 46, 62, .15);
+}
+.pillar-index {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--odyssey-orange-soft);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.home-page .timeline-item { position: relative; }
+.event-month {
+  display: none;
+  pointer-events: none;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+  line-height: .85;
+  color: var(--odyssey-cream);
+}
+.event-month small {
+  display: block;
+  margin-top: 12px;
+  font-family: "DM Sans", sans-serif;
+  font-size: .62rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.home-page .logo-showcase { position: relative; isolation: isolate; overflow: hidden; }
+.voyage-waves--closing {
+  z-index: -1;
+  color: var(--odyssey-orange-soft);
+  opacity: .35;
+  mask-image: linear-gradient(90deg, #000, #000 20%, transparent 40%, transparent 60%, #000 80%, #000);
+}
+.home-page .logo-showcase > img {
+  width: 152px;
+  height: 152px;
+  border-radius: 50%;
+  outline: 1px solid var(--odyssey-line);
+  outline-offset: 15px;
+  margin-bottom: 40px;
+}
+.home-page .logo-showcase h3 { font-size: clamp(2.2rem, 4vw, 3.8rem); }
+
+.subpage main > section:first-child { position: relative; isolation: isolate; overflow: hidden; }
+/* Generated text wrappers must not inherit the Chinese accent's nowrap. */
+body.subpage .text-center h1 .gsap-text,
+body.subpage .text-center h1 .gsap-mask,
+body.subpage .text-center h1 .gsap-word {
+  color: inherit;
+  white-space: normal;
+  max-width: 100%;
+}
+.voyage-waves--subpage {
+  z-index: -1;
+  opacity: .26;
+  mask-image: linear-gradient(90deg, #000, transparent 35%, transparent 65%, #000);
+}
+
+@media (min-width: 900px) {
+  .home-page .timeline { max-width: none; }
+  .home-page .timeline-item { padding-right: 180px; }
+  .event-month {
+    display: block;
+    position: absolute;
+    top: 4px;
+    right: 28px;
+    width: 100px;
+    text-align: center;
+    font-size: 5.7rem;
+    opacity: .2;
+    transform: translateY(10px);
+    transition: opacity 600ms var(--odyssey-ease-out), transform 600ms var(--odyssey-ease-out);
+  }
+  .timeline-item.is-current .event-month { opacity: .65; transform: translateY(0); }
+  .timeline-item.is-current .timeline-date { color: var(--odyssey-orange-soft); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-spotlight]:hover > .odyssey-spotlight { opacity: 1; }
+  .home-page .pillar-link:hover { background: rgba(22, 46, 62, .35); }
+  .home-page .doc-link:hover { border-color: var(--odyssey-orange-soft); }
+}
+
+@media (max-width: 640px) {
+  body.subpage .text-center h1 span.text-sunset-500 {
+    font-size: clamp(1.5rem, 8vw, 2.2rem);
+    white-space: normal;
+  }
+  .home-page .hero-content > .hero-edition,
+  .home-page .hero-content > .hero-year { display: none; }
+  .home-page .hero-content > .voyage-waves--hero { opacity: .2; }
+  .voyage-waves--mission { opacity: .08; }
+  .home-page .pillar-link { min-height: 106px; padding: 14px 16px; }
+  .voyage-waves--closing { opacity: .2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-month { transform: none; transition: none; }
+  .odyssey-spotlight { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .voyage-waves, .odyssey-spotlight, .event-month { display: none; }
+}
