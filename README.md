@@ -1,6 +1,6 @@
 # Cabinet Odyssey 2026–2027
 
-Official website for the St. Stephen's College Students' Association, Cabinet No.1 Odyssey.
+Official website for the St Stephen's College Students' Association — Cabinet No.1 Odyssey.
 
 ## Assets
 
